@@ -10,10 +10,10 @@ names(dataset)[names(dataset) == "logitRisk"] <- "LogitRisk"
 a <- ggplot(dataset, aes(x = LogitRisk))
 # y axis scale = ..density.. (default behaviour)
 a + geom_density(fill = "lightgray") +
-  geom_vline(aes(xintercept = mean(LogitRisk)), 
+  geom_vline(aes(xintercept = mean(LogitRisk)),
              linetype = "dashed", size = 0.6,color = "#FC4E07")
 
-summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991 
+summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991
 
 
 
@@ -27,19 +27,19 @@ L<-dataset[which(dataset$STUDYID==3),]
 #install.packages("ggpubr")
 
 # Basic density plot with mean line and marginal rug
-ggdensity(dataset, x = "LogitRisk", 
+ggdensity(dataset, x = "LogitRisk",
           fill = "#0073C2FF", color = "#0073C2FF",
           add = "mean", rug = TRUE)
 
 
-summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991 
+summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991
 
-ggdensity(dataset, x = "Risk", 
+RiskDist<-ggdensity(dataset, x = "Risk",
           fill = "#0073C2FF", color = "#0073C2FF",
           add = "mean", rug = TRUE)
 
 
-summary(dataset$Risk) ### mean=0.37106, median=0.35456 
+summary(dataset$Risk) ### mean=0.37106, median=0.35456
 
 
 # Change outline and fill colors by groups ("Treatment")
@@ -60,7 +60,7 @@ c<-ggdensity(L, x = "LogitRisk",
           add = "mean", rug = TRUE,xlim=c(-4,4),
           color = "Treatment", fill = "Treatment",
           palette = c("blue", "yellow"), xlab = "Logit Risk score for AFFIRM study")
-ggarrange(a, b, c, 
+ggarrange(a, b, c,
           labels = c("A", "B", "C"),
           ncol = 2, nrow = 2)
 ###FOR RISK
@@ -79,7 +79,7 @@ c<-ggdensity(L, x = "Risk",
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
              palette = c("blue", "yellow"), xlab = "Risk score for AFFIRM study")
-ggarrange(a, b, c, 
+RandomizationRisk<-ggarrange(a, b, c,
           labels = c("A", "B", "C"),
           ncol = 2, nrow = 2)
 
@@ -94,7 +94,7 @@ ggdensity(dataset, x = "LogitRisk",
           palette = c("blue", "red"), xlab = "Logit Risk score as a prognostic factor")
 
 
-ggdensity(dataset, x = "Risk",
+PrognosticRisk<-ggdensity(dataset, x = "Risk",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
           palette = c("blue", "red"), xlab = "Risk score as a prognostic factor")
@@ -207,5 +207,8 @@ summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==0])
 summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 
-ggarrange(d,e,f, labels = c("A","B","C"))
-
+EffectModRISK<-ggarrange(d,e,f, labels = c("A","B","C"))
+RiskDist
+RandomizationRisk
+PrognosticRisk
+EffectModRISK

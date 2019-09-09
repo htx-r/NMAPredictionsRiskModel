@@ -1,5 +1,5 @@
 ############################################################
-#         Master analysis for MS NMA Prediction MODEL 
+#         Master analysis for MS NMA Prediction MODEL
 ############################################################
 
 ##########################################################
@@ -8,8 +8,8 @@
 ###load the github libraries
 library(devtools)
 install_github("htx-r/CleaningData",force=TRUE)
-install_github("htx-r/NMApredictionsRiskModel", force = TRUE)
-library(NMApredictionsRiskModel)
+install_github("htx-r/NMAPredictionsRiskModel", force = TRUE)
+library(NMAPredictionsRiskModel)
 library(CleaningData)
 library(R2jags)
 library(dplyr)
@@ -24,8 +24,8 @@ mydatapath="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data/IP
 ###cleaning the data from BIOGEN, defined the outcomes in columns: RELAPSE02Year, RELAPSE01Year, names of Treatments and Drugs
 cleanBIOGENtrials<-cleanBIOGENtrials.fun(mydatapath)
 adsl01<-cleanBIOGENtrials$adsl01
-### Select variables that I need- exclude variables with a huge ammount of missing values, 
-#exclude factors with just one category, exclude factors that are transformations from already existing variables) 
+### Select variables that I need- exclude variables with a huge ammount of missing values,
+#exclude factors with just one category, exclude factors that are transformations from already existing variables)
 #exclude highly correlated variables
 ###and recode them in numerical values (e.g. Male=1, Female=0)
 MSrelapse<-numericalDataRisk.fun(adsl01)  ##final full dataset
@@ -36,13 +36,13 @@ MSrelapse<-numericalDataRisk.fun(adsl01)  ##final full dataset
 
 ####################### CHECK DIFFERENT RISK MODELS + SHRINKAGE ###############
 
-#########results of Internal risk score - model 1 
+#########results of Internal risk score - model 1
 InternalModel<-RiskModelSelection.fun(MSrelapse,"Internal")
-######## model Internal with splines to all continues variables 
+######## model Internal with splines to all continues variables
 #model 2
 InternalSplinesModel<-RiskModelSelection.fun(MSrelapse,"InternalSplines")
 ######## model Internal with splines to only significant non-linear
-# continues variables 
+# continues variables
 #model 3
 InternalSplinesSignModel<-RiskModelSelection.fun(MSrelapse,"InternalSplinesSign")
 ###### model Internal with Interactions - model 4
@@ -53,15 +53,19 @@ CrossInternalModel<-RiskModelSelection.fun(MSrelapse,"CrossInternal")
 FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")
 
 
-### Chosen model (internal + sign. splines - model 3) 
+### Chosen model (internal + sign. splines - model 3)
 ## and graphs for this model
 Risk<-FinalRiskModel.fun(MSrelapse)
 #data including the risk and logitof risk for each patient (2 extra columns)
 RiskData<-Risk[[2]]
 ## the lrm final model
 RiskModel<-Risk[[1]]
-
-
+###plots of risk score
+source('Plots.R')
+RiskDist
+RandomizationRisk
+PrognosticRisk
+EffectModRISK
 #######################################################################################
 ####################### NMA PREDICTION MODEL ###############################################
 ######################################################################################
@@ -78,7 +82,7 @@ jagsdataIPDNMR <- list(
   na=c(2,3,2),
   arm=RiskData$arm,
   Risk=RiskData$logitRisk,
-  meanRisk=c(-0.5360,-0.6501,-0.5110),
+  meanRisk=c(-0.5360,-0.6501,-0.5110), ##here is the mean of logit of risk
   nt=4,
   ref=4
 )
@@ -89,4 +93,9 @@ IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to
 print(IPDNMRJAGSmodel)
 # traceplots
 traceplot(IPDNMRJAGSmodel$BUGSoutput)
+###plot of IPD NMR
+source('graph ipd.R')
+IPDplot
+
+##remove list
 rm(list=ls())
