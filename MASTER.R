@@ -19,7 +19,8 @@ library(glmpath)
 ####################################  DATA   ###########################################
 
 ###### Give your path of data
-mydatapath="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data/IPD data from 6 Biogen trials"
+#mydatapath="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data/IPD data from 6 Biogen trials"
+mydatapath="~/Google Drive/_mydrive/HTx/Biogen data/IPD data from 6 Biogen trials"
 ######## load data
 ###cleaning the data from BIOGEN, defined the outcomes in columns: RELAPSE02Year, RELAPSE01Year, names of Treatments and Drugs
 cleanBIOGENtrials<-cleanBIOGENtrials.fun(mydatapath)
@@ -50,16 +51,25 @@ InternalInteractionsModel<-RiskModelSelection.fun(MSrelapse,"InternalInteraction
 ### Cross Internal model - model 5
 CrossInternalModel<-RiskModelSelection.fun(MSrelapse,"CrossInternal")
 ######### Fabio's model - model 6
-FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")
+FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")##!!!!!!!!!!!!! the putput of the function should be the validate function discrimination and calibration for the 4 shrinkage approaches
 
+
+#!!!!the RiskModelSelection.fun shoud have output list(discrimination=discrimiation, claibration=claibration)
+##!!! discrimination is from the validate (4x1) same for claibration
+#!!!!!!here you need a script that creates the table with all the comparison of the models
+
+#creation of table 2
+comparisonofmodelstable<-cbind.data.frame(c(InternalSplinesSignModel$discrimination......), c(InternalSplinesSignModel$calibration))
+# 12x2 matrix
 
 ### Chosen model (internal + sign. splines - model 3)
 ## and graphs for this model
-Risk<-FinalRiskModel.fun(MSrelapse)
+Risk<-FinalRiskModel.fun(MSrelapse)###!! this should be a script
+
 #data including the risk and logitof risk for each patient (2 extra columns)
-RiskData<-Risk[[2]]
+RiskData<-Risk[[2]]#!!!include in scirpt
 ## the lrm final model
-RiskModel<-Risk[[1]]
+RiskModel<-Risk[[1]]#!!!include in scirpt
 ###plots of risk score
 source('Plots.R')
 RiskDist
@@ -70,9 +80,10 @@ EffectModRISK
 ####################### NMA PREDICTION MODEL ###############################################
 ######################################################################################
 #add proper columns in the RiskData, like arm, meanRisk, etc.
-RiskData<-DataForIPDNMR.fun()
+RiskData<-DataForIPDNMR.fun()##!!!! script
 
 ###data for jagsmodel with metarigression on logit of Risk
+##!!!! script with the precvious
 jagsdataIPDNMR <- list(
   Nstudies=3,
   Np=sum(as.numeric(table(as.numeric(as.factor(RiskData$STUDYID))))),
