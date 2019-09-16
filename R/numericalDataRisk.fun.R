@@ -4,7 +4,7 @@
 #####################################################################################################################################################
 
 numericalDataRisk.fun=function(dataset){
-  library(car)
+  #library(car)
   ##################################HANDLING VARIABLES##############################################
   ##keep only needed variables
   keep<-c("STUDYID","USUBJID","AGE","SEX","RACE","TRT01A","HEIGHTBL","WEIGHTBL","EDSSBL","ONSYRS","DIAGYRS",
@@ -14,7 +14,7 @@ numericalDataRisk.fun=function(dataset){
           "CEREBRBL","DISTWKBL","T25FWP1","NHPTMP1","NHPTDHP1","NHPTNHP1","PASATP1","T25FWPC","NHPTMPC","NHPTDHPC",
           "NHPTNHPC","PASATPC","RELAPSE1year","RELAPSE2year")
   MSrelapse<-dataset[,keep]
-  
+
   ##################################HANDLING VARIABLES############################
   ###########################RECODE VARIABLES and make them factors############################
   MSrelapse$SEX<-recode(MSrelapse$SEX, "'M'=1; 'F'=0")
@@ -31,7 +31,7 @@ numericalDataRisk.fun=function(dataset){
   MSrelapse$VISUALBL<-as.factor(MSrelapse$VISUALBL)
   ###BRAINBL categories instead of 0, 1, 2, 3, 4 there are 0, 1, >=2
   MSrelapse$BRAINBL[which(MSrelapse$BRAINBL==3 | MSrelapse$BRAINBL==4)]<-2
-  MSrelapse$BRAINBL<-as.factor(MSrelapse$BRAINBL) 
+  MSrelapse$BRAINBL<-as.factor(MSrelapse$BRAINBL)
   ###PYRAMIBL categories instead of 0, 1, 2, 3, 4, 5, 6 there are 0, 1, 2, >=3
   MSrelapse$PYRAMIBL[which(MSrelapse$PYRAMIBL==4 | MSrelapse$PYRAMIBL==5)]<-3
   MSrelapse$PYRAMIBL<-as.factor(MSrelapse$PYRAMIBL)
@@ -85,11 +85,11 @@ numericalDataRisk.fun=function(dataset){
   MSrelapse$NHPTNHPC<-log(MSrelapse$NHPTNHPC+100)
   #PASATPC
   MSrelapse$PASATPC<-log(MSrelapse$PASATPC+101)
-  
+
   ##### remove highly correlated variables (after checking with Spearman correlation)
   todrop<- c("PASATP1", "NHPTDHBL", "NHPTNHBL", "NHPTMP1", "NHPTDHP1", "NHPTNHP1", "T1VOLBL", "VFT100BL","VFT125BL","T25FWP1", "NHPTDHPC", "NHPTNHPC","DIAGYRS")
   MSrelapse <- MSrelapse[,!(names(MSrelapse) %in% todrop)]
-  #remove Sentinel study - Not included in AD data - Combination of therapies 
+  #remove Sentinel study - Not included in AD data - Combination of therapies
   MSrelapse<-MSrelapse[which(MSrelapse$STUDYID!="SENTINEL"),]
   return(MSrelapse)
 }

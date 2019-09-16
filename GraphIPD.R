@@ -1,7 +1,9 @@
+##################### Script ro Graph the results from NMR IPD model ############
+
 
 ###model for the logit of RELAPSE for placebo patients only
 ##only placebo arms are needed
-K<-RiskData[which(RiskData$TRT01A==4),]
+PlaceboData<-RiskData[which(RiskData$TRT01A==4),]
 
 modelFORplacebo<-function(){
   ###likelihood
@@ -15,8 +17,8 @@ modelFORplacebo<-function(){
 }
 
 jagsdataFORplacebo <- list(
-  Np=nrow(K),
-  outcome=K$RELAPSE2year
+  Np=nrow(PlaceboData),
+  outcome=PlaceboData$RELAPSE2year
 )
 
 #run the model
@@ -59,29 +61,33 @@ p<-NA
 p<-as.data.frame(p)
 p<-expit(logitp)
 
-GraphData<-cbind(Risknew,p)
+######### Create the Data for the graph
 
-m<-cbind(Risknew,p[,1])
-m$Treatment<-1
-colnames(m)<-c("Risknew","prelapse","Treatment")
-
-n<-cbind(Risknew,p[,2])
-n$Treatment<-2
-colnames(n)<-c("Risknew","prelapse","Treatment")
-k<-cbind(Risknew,p[,3])
-k$Treatment<-3
-colnames(k)<-c("Risknew","prelapse","Treatment")
-l<-cbind(Risknew,p[,4])
-l$Treatment<-4
-colnames(l)<-c("Risknew","prelapse","Treatment")
-Graphdata<-rbind(m,n,k,l)
+##For Dimethyl fumarate - Risk & propability to relapse
+DF<-cbind(Risknew,p[,1])
+DF$Treatment<-1
+colnames(DF)<-c("Risknew","prelapse","Treatment")
+##For Glatiramer acetate - Risk & propability to relapse
+GA<-cbind(Risknew,p[,2])
+GA$Treatment<-2
+colnames(GA)<-c("Risknew","prelapse","Treatment")
+##For Natalizumab - Risk & propability to relapse
+N<-cbind(Risknew,p[,3])
+N$Treatment<-3
+colnames(N)<-c("Risknew","prelapse","Treatment")
+##For Placebo - Risk & propability to relapse
+Pl<-cbind(Risknew,p[,4])
+Pl$Treatment<-4
+colnames(Pl)<-c("Risknew","prelapse","Treatment")
+##merge data for all the treatments
+Graphdata<-rbind(DF,GA,N,Pl)
 
 ##### graph
 
-library(ggplot2)
-library(ggpubr)
+#library(ggplot2)
+#library(ggpubr)
 #install.packages("gridExtra")
-library(gridExtra)
+#library(gridExtra)
 # Basic line plot with points
 ggplot(data=Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line()+
@@ -92,11 +98,14 @@ IPDplot<-ggplot(Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_point(aes(color=Treatment))
 IPDplot
 
-# Use custom color palettes
-# p+scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))
-# Use brewer color palettes
-#p+scale_color_brewer(palette="Dark2")
-# Use grey scale
-#p + scale_color_grey() + theme_classic()
-
-
+#remove no needed items
+rm(DF)
+rm(GA)
+rm(N)
+rm(Pl)
+rm(logitp)
+rm(logitRisknew)
+rm(p)
+rm(PlaceboData)
+rm(Risknew)
+rm(IPDFORplaceboJAGSmodel)

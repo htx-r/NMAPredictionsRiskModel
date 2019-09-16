@@ -1,49 +1,45 @@
-dataset=RiskData
-library(ggpubr)
-#install.packages("gridExtra")
-library(gridExtra)
+######################### SCRIPT PLOTTING RISK & LOGITRISK DISTRIBUTIONS  ###########
 
+
+#library(ggpubr)
+#install.packages("gridExtra")
+#library(gridExtra)
+
+####col.names of dataset
+dataset=RiskData
 names(dataset)[names(dataset) == "TRT01A"] <- "Treatment"
 dataset$Treatment<-recode(dataset$Treatment,"1='Dimethyl fumerate'; 2='Galtiramer acetate'; 3='Natalizumab';4='Placebo'")
 names(dataset)[names(dataset) == "logitRisk"] <- "LogitRisk"
 ##### A. The density of the risk score in the whole dataset
-a <- ggplot(dataset, aes(x = LogitRisk))
+#a <- ggplot(dataset, aes(x = LogitRisk))
 # y axis scale = ..density.. (default behaviour)
-a + geom_density(fill = "lightgray") +
-  geom_vline(aes(xintercept = mean(LogitRisk)),
-             linetype = "dashed", size = 0.6,color = "#FC4E07")
+#a + geom_density(fill = "lightgray") +
+#  geom_vline(aes(xintercept = mean(LogitRisk)),
+#             linetype = "dashed", size = 0.6,color = "#FC4E07")
 
+
+# A. The distribution in the whole dataset
+
+#logitrisk
 summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991
+RiskLogitRisk<-ggdensity(dataset, x = "LogitRisk",
+          fill = "#0073C2FF", color = "#0073C2FF",
+          add = "mean", rug = TRUE)
+#risk
+summary(dataset$Risk)
+RiskDist<-ggdensity(dataset, x = "Risk",
+                    fill = "#0073C2FF", color = "#0073C2FF",
+                    add = "mean", rug = TRUE)
 
 
-
-##### B. The distribution of Risk per arm for each study
+##### B. The distribution per arm for each study
 
 ##data per study
 S<-dataset[which(dataset$STUDYID==1),]
 K<-dataset[which(dataset$STUDYID==2),]
 L<-dataset[which(dataset$STUDYID==3),]
 
-#install.packages("ggpubr")
 
-# Basic density plot with mean line and marginal rug
-ggdensity(dataset, x = "LogitRisk",
-          fill = "#0073C2FF", color = "#0073C2FF",
-          add = "mean", rug = TRUE)
-
-
-summary(dataset$LogitRisk) ### mean=-0.5611, median=-0.5991
-
-RiskDist<-ggdensity(dataset, x = "Risk",
-          fill = "#0073C2FF", color = "#0073C2FF",
-          add = "mean", rug = TRUE)
-
-
-summary(dataset$Risk) ### mean=0.37106, median=0.35456
-
-
-# Change outline and fill colors by groups ("Treatment")
-# Use a custom palette
 #####FOR LOGIT
 a<-ggdensity(S, x = "LogitRisk",
           add = "mean", rug = TRUE, xlim=c(-4,4),
@@ -60,7 +56,7 @@ c<-ggdensity(L, x = "LogitRisk",
           add = "mean", rug = TRUE,xlim=c(-4,4),
           color = "Treatment", fill = "Treatment",
           palette = c("blue", "yellow"), xlab = "Logit Risk score for AFFIRM study")
-ggarrange(a, b, c,
+RandomizationLogitRisk<-ggarrange(a, b, c,
           labels = c("A", "B", "C"),
           ncol = 2, nrow = 2)
 ###FOR RISK
@@ -85,24 +81,25 @@ RandomizationRisk<-ggarrange(a, b, c,
 
 
 
-#####The distribution of the risk in those with true relapse and true non-relapse in the entire dataset
+#C. The distributionin those with true relapse and true non-relapse in the entire dataset
 dataset$RELAPSE2year<-as.factor(dataset$RELAPSE2year)
-
-ggdensity(dataset, x = "LogitRisk",
+#logitRisk
+PrognosticLogitRisk<-ggdensity(dataset, x = "LogitRisk",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
           palette = c("blue", "red"), xlab = "Logit Risk score as a prognostic factor")
 
-
+#Risk
 PrognosticRisk<-ggdensity(dataset, x = "Risk",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
           palette = c("blue", "red"), xlab = "Risk score as a prognostic factor")
 
 
-#########
-#######logit risk
 
+#D. The distribution in those with true relapse and true non-relapse for each arm in each study
+
+##logit risk
 S$RELAPSE2year<-as.factor(S$RELAPSE2year)
 d<-ggdensity(S, x = "LogitRisk",merge=T,
           add = "mean", rug = TRUE,xlim=c(-2,2),
@@ -153,7 +150,7 @@ summary(L$LogitRisk[L$Treatment=="Placebo" & L$RELAPSE2year==0])
 summary(L$LogitRisk[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 
-ggarrange(d,e,f, labels = c("A","B","C"))
+EffectModLogitRisk<-ggarrange(d,e,f, labels = c("A","B","C"))
 
 
 ###Risk
@@ -207,8 +204,15 @@ summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==0])
 summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 
-EffectModRISK<-ggarrange(d,e,f, labels = c("A","B","C"))
-RiskDist
-RandomizationRisk
-PrognosticRisk
-EffectModRISK
+EffectModRisk<-ggarrange(d,e,f, labels = c("A","B","C"))
+
+#remove no needed items
+rm(a)
+rm(b)
+rm(c)
+rm(d)
+rm(e)
+rm(f)
+rm(K)
+rm(L)
+rm(S)
