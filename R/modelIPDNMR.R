@@ -52,5 +52,29 @@ modelIPDNMR<-function(){
 
   }
 
+  ###odds for placebo arm via the placebo arm dataset
+  for (i in 1:NpPlacebo){
+    outcomeP[i]~dbern(pplacebo[i])
+    ###formula
+    logit(pplacebo[i])<-logitpplacebo
+  }
+  #prior for logitpplacebo
+  logitpplacebo~dnorm(0,0.01)
+
   for(j in 1:nt){ORref[j]<- exp(d[j] - d[4])}
-}
+
+ ##### calculation of predicted risk to patients
+
+  ### I did not substract the mean(logit) as it is equal to 0 - meanRisk=0.5 & meanlogitrisk=0 (logit(0.5)=0)
+  for (i in 1:99){
+    for(j in 1:nt){
+    logitp[i,j]<-logitpplacebo+d[j]+Beta*(logitRisknew[i,1]-logitmeanRisknew)+be[j]*(logitRisknew[i,1]-logitmeanRisknew)
+    }
+  }
+
+  #for (i in 1:99){
+   # for(j in 1:nt){
+    #  p[i,j]<-exp(logitp[i,j])/(1+exp(logitp[i,j]))
+    #}
+  }
+

@@ -28,9 +28,11 @@ library(synthpop)
 
 ###### Give your path of data
 mydatapath="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data/IPD data from 6 Biogen trials"
+mydatapath1="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data cleaning"
 ######## load data
 ###cleaning the data from BIOGEN, defined the outcomes in columns: RELAPSE02Year, RELAPSE01Year, names of Treatments and Drugs
 cleanBIOGENtrials<-cleanBIOGENtrials.fun(mydatapath)
+PlaceboArms<-cleanPLACEBOtrials.fun(mydatapath1)
 adsl01<-cleanBIOGENtrials$adsl01
 ### Select variables that I need- exclude variables with a huge ammount of missing values,
 #exclude factors with just one category, exclude factors that are transformations from already existing variables)
@@ -79,14 +81,14 @@ EffectModRisk #distribution of Risk for those who relapsed and those who did not
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('d','be', 'Beta', 'ORref','u'),model.file = modelIPDNMR,
+IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref', 'logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 print(IPDNMRJAGSmodel)
 # traceplots
 traceplot(IPDNMRJAGSmodel$BUGSoutput)
 
 ####plot of IPD NMR
-source('GraphIPD.R')
+source('GraphForPredictedRisk.R')
 IPDplot
 
 ##remove list
