@@ -64,8 +64,11 @@ ComparisonOfModelsTable
 ### Chosen model (internal + sign. splines - model 2)
 ## and graphs for this model
 
+
 #the final model and the risk data (with extra columns: Risk and logitRisk)
+
 source('FinalRiskModel.R')
+
 ###plots of risk score
 source('Plots.R')
 RiskDist #distribution of Risk in the whole dataset
@@ -81,11 +84,14 @@ EffectModRisk #distribution of Risk for those who relapsed and those who did not
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref', 'logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','u'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
-print(IPDNMRJAGSmodel)
+
+print(IPDNMRJAGSmodel,varname=c("be","ORref","u"))
+
 # traceplots
-traceplot(IPDNMRJAGSmodel$BUGSoutput)
+
+traceplot(IPDNMRJAGSmodel$BUGSoutput,varname=c("be","ORref","u"))
 
 ####plot of IPD NMR
 source('GraphForPredictedRisk.R')

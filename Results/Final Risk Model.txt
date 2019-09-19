@@ -1,0 +1,44 @@
+The final model after the shrinkage of coefficients (penalized) is:
+Logistic Regression Model
+ 
+ lrm(formula = RELAPSE2year ~ AGE + WEIGHTBL + EDSSBL + rcs(RLPS3YR, 
+     4) + TRELMOS + PRMSGR + REGION + NHPTMBL + GDLESBL + SFPCSBL + 
+     SENSORBL + DISTWKBL, data = X, x = TRUE, y = TRUE, linear.predictors = T, 
+     penalty = penalized$penalty)
+ 
+ 
+ Penalty factors
+ 
+  simple nonlinear interaction nonlinear.interaction
+      32        32          32                    32
+ 
+                      Model Likelihood     Discrimination    Rank Discrim.    
+                         Ratio Test           Indexes           Indexes       
+ Obs          1997    LR chi2   152.28     R2       0.091    C       0.662    
+  0           1256    d.f.      13.596     g        0.602    Dxy     0.323    
+  1            741    Pr(> chi2)<0.0001    gr       1.827    gamma   0.323    
+ max |deriv| 2e-05    Penalty    14.16     gp       0.134    tau-a   0.151    
+                                           Brier    0.216                     
+ 
+            Coef    S.E.   Wald Z Pr(>|Z|) Penalty Scale
+ Intercept  -0.1171 0.7801 -0.15  0.8807    0.0000      
+ AGE        -0.0179 0.0056 -3.17  0.0015   50.0406      
+ WEIGHTBL   -0.0066 0.0029 -2.32  0.0206   95.0049      
+ EDSSBL      0.1083 0.0546  1.99  0.0471    6.6216      
+ RLPS3YR     0.1489 0.0600  2.48  0.0131    8.8527      
+ RLPS3YR'   -0.0001 0.0834  0.00  0.9987    9.3727      
+ RLPS3YR''  -0.2261 0.2145 -1.05  0.2917    3.2916      
+ TRELMOS    -0.0268 0.0109 -2.47  0.0137   34.6301      
+ PRMSGR=1    0.2414 0.0915  2.64  0.0083    4.0000      
+ REGION=2    0.1548 0.1663  0.93  0.3517    5.0596      
+ REGION=3    0.1366 0.1135  1.20  0.2289    5.0596      
+ REGION=4    0.1993 0.1826  1.09  0.2750    5.0596      
+ REGION=5    0.5248 0.1106  4.74  <0.0001   5.0596      
+ NHPTMBL     0.3017 0.2061  1.46  0.1433    1.4270      
+ GDLESBL=1   0.2019 0.0909  2.22  0.0264    4.0000      
+ SFPCSBL    -0.0194 0.0053 -3.66  0.0003   57.1993      
+ SENSORBL=1  0.0511 0.1100  0.46  0.6423    4.8990      
+ SENSORBL=2  0.1890 0.1144  1.65  0.0987    4.8990      
+ SENSORBL=3  0.0929 0.1616  0.58  0.5652    4.8990      
+ DISTWKBL=1 -0.2272 0.1569 -1.45  0.1475    4.0000      
+ 
