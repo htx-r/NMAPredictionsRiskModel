@@ -53,7 +53,7 @@ jagsdataIPDNMR <- list(
   logitmeanRisknew=logitmeanRisknew,
   arm=RiskData$arm,
   Risk=RiskData$logitRisk,
-  meanRisk=c(-0.5360,-0.6501,-0.5110), ##here is the mean of logit of risk
+  meanRisk=c(-0.527,-0.6507,-0.5123), ##here is the mean of logit of risk
   nt=4,
   ref=4
 )

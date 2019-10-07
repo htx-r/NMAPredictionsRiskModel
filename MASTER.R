@@ -23,6 +23,8 @@ library(gridExtra)
 library(ggpubr)
 library(ggplot2)
 library(synthpop)
+library(pmsampsize)
+library(selectiveInference)
 #######################################################################################
 ####################################  DATA   ###########################################
 
@@ -43,18 +45,16 @@ MSrelapse<-numericalDataRisk.fun(adsl01)  ##final full dataset
 #######################################################################################
 ############################ RISK MODEL ###############################################
 ######################################################################################
-
+source('EPVandSampleSize.R')
 ####################### CHECK DIFFERENT RISK MODELS + SHRINKAGE ###############
 
-#########results of Internal risk score - model 1
+######## Model 1 - results of Internal risk score
 InternalModel<-RiskModelSelection.fun(MSrelapse,"Internal")
-######## model Internal with splines to only significant non-linear
-# continues variables
-#model 2
+######## Model 2 - model Internal with splines to only significant non-linear continues variables
 InternalSplinesSignModel<-RiskModelSelection.fun(MSrelapse,"InternalSplinesSign")
-###### model Internal with Interactions - model 3
+######  Model 3 - model Internal with Interactions
 InternalInteractionsModel<-RiskModelSelection.fun(MSrelapse,"InternalInteractions")
-######### Fabio's model - model 4
+#########  Model 4 - Fabio's model
 FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")
 
 ###comparison of models to select the best one with respect to discrimination and calibration of each model
@@ -84,18 +84,22 @@ EffectModRisk #distribution of Risk for those who relapsed and those who did not
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','u'),model.file = modelIPDNMR,
+IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+#IPDNMRJAGSmodelFORlogitp <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
+#                                 n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 print(IPDNMRJAGSmodel,varname=c("be","ORref","u"))
-
+#print(IPDNMRJAGSmodelFORlogitp)
+#credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
 # traceplots
-
 traceplot(IPDNMRJAGSmodel$BUGSoutput,varname=c("be","ORref","u"))
 
 ####plot of IPD NMR
 source('GraphForPredictedRisk.R')
 IPDplot
+
+
 
 ##remove list
 rm(list=ls())
