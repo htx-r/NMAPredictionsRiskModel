@@ -25,6 +25,7 @@ library(ggplot2)
 library(synthpop)
 library(pmsampsize)
 library(selectiveInference)
+library(plyr)
 #######################################################################################
 ####################################  DATA   ###########################################
 
@@ -66,9 +67,9 @@ ComparisonOfModelsTable
 
 
 #the final model and the risk data (with extra columns: Risk and logitRisk)
-
 source('FinalRiskModel.R')
-
+## calibration plot of the model
+source('Calibration plot.R')
 ###plots of risk score
 source('Plots.R')
 RiskDist #distribution of Risk in the whole dataset

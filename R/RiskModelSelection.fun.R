@@ -115,6 +115,7 @@ RiskModelSelection.fun<-function(dataset,model){
     set.seed(1)
     penalized	<- pentrace(finalmodel, seq(0,200,0.1)) #28.1
     penalized$penalty
+    plot(pentrace(finalmodel, seq(0,200,0.1)))
     #penalized	<- pentrace(finalmodel, c(0,1,2,3,4,5,6,7,8,10,12,14,20, 24, 32,40))
     finalmodel.pen <- update (finalmodel, penalty=penalized$penalty)
     #### bootstrap validation for the penalized model
