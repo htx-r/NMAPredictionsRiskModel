@@ -14,7 +14,19 @@ EPV<-events/df
 cat("The EPV of the model is", EPV, fill=TRUE)
 
 #### sample size by Riley et al
+###validate command
+#### bootstrap validation for the penalized model
+set.seed(1)
+val.pen<-validate(RiskModel,method="boot",B=500)
+R2Nagel=val.pen[2,5]#that gives the
+#R2 Nagelkerdes = 0.0842 (corrected for optimism)
 
-sample_size<-pmsampsize(type="b", rsquared=0.1, shrinkage=0.90, parameters = df, prevalence= 741/1997)
+#null model
+mod0 <- lrm(RELAPSE2year~1,x=TRUE,y=TRUE,data=X)
+MaxRcs<-(1-exp(2*as.numeric(logLik(mod0)/1997)))
+##R2csadj=R2Nagelkerdes*Max(R2xsadj)
+R2csadj=R2Nagel*MaxRcs
+
+sample_size<-pmsampsize(type="b", rsquared=0.11, shrinkage=0.90, parameters = df, prevalence= 741/1997)
 cat("The needed sample size is")
 print(sample_size$results_table)
