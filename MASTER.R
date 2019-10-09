@@ -62,9 +62,9 @@ FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")
 source('ComparisonOfModels.R')
 ComparisonOfModelsTable
 
-### Chosen model (internal + sign. splines - model 2)
-## and graphs for this model
 
+### Chosen model (model 1, with penalized Maximum Likelihood estimation)
+## and graphs for this model
 
 #the final model and the risk data (with extra columns: Risk and logitRisk)
 source('FinalRiskModel.R')
@@ -85,17 +85,20 @@ EffectModRisk #distribution of Risk for those who relapsed and those who did not
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 #IPDNMRJAGSmodelFORlogitp <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
 #                                 n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+#IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','d','u'),model.file = modelIPDNMR,
+                                # n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+print(IPDNMRJAGSmodel,varname=c("be","ORref","u", "d"))
 
-print(IPDNMRJAGSmodel,varname=c("be","ORref","u"))
 #print(IPDNMRJAGSmodelFORlogitp)
 #credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
 # traceplots
+# 2. Create the plot
 traceplot(IPDNMRJAGSmodel$BUGSoutput,varname=c("be","ORref","u"))
-
+# 3. Close the file
 ####plot of IPD NMR
 source('GraphForPredictedRisk.R')
 IPDplot

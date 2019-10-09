@@ -61,12 +61,11 @@ modelIPDNMR<-function(){
   #prior for logitpplacebo
   logitpplacebo~dnorm(0,0.01)
 
-  for(j in 1:nt){ORref[j]<- exp(d[j] - d[4])}
+  for(j in 1:nt){ORref[j]<- exp(d[j] - d[ref])}
 
  ##### calculation of predicted risk to patients
 
-  ### I did not substract the mean(logit) as it is equal to 0 - meanRisk=0.5 & meanlogitrisk=0 (logit(0.5)=0)
-  for (i in 1:99){
+   for (i in 1:99){
     for(j in 1:nt){
     logitp[i,j]<-logitpplacebo+d[j]+Beta*(logitRisknew[i,1]-logitmeanRisknew)+be[j]*(logitRisknew[i,1]-logitmeanRisknew)
     }

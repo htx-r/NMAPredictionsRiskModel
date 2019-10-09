@@ -1,0 +1,20 @@
+                                              discrimination calibration
+Model 1 with LASSO coefficients and shirnkage      0.6320705   0.9119046
+Model 1 LASSO 2                                    0.6390632   0.9119046
+Model 1 uniform shrinkage                          0.6474365   0.9119046
+Model 1 ridge AIC                                  0.6495055   1.0311788
+Model 1 ridge AUC                                  0.6372022   0.9119046
+Model 2 LASSO 2                                    0.6369588   0.9054001
+Model 2 uniform shrinkage                          0.6498122   0.9086426
+Model 2 ridge AIC                                  0.6499638   0.9181504
+Model 2 ridge AUC                                  0.6377707   0.9086426
+Model 3 LASSO 2                                    0.6137737   0.7731579
+Model 3 uniform shrinkage                          0.6402008   0.7731579
+Model 3 ridge AIC                                  0.6445757   1.1040580
+Model 3 ridge AUC                                  0.6182923   0.7731579
+Model 4 LASSO 2                                    0.6084892   0.8840675
+Model 4 uniform shrinkage                          0.6257226   0.8840675
+Model 4 ridge AIC                                  0.6277693   1.0592098
+Model 4 ridge AUC                                  0.6082905   0.8840675
+null device 
+          1 

@@ -8,7 +8,7 @@
 ####col.names of dataset
 dataset=RiskData
 names(dataset)[names(dataset) == "TRT01A"] <- "Treatment"
-dataset$Treatment<-recode(dataset$Treatment,"1='Dimethyl fumerate'; 2='Galtiramer acetate'; 3='Natalizumab';4='Placebo'")
+dataset$Treatment<-recode(dataset$Treatment,"1='Avonex'; 2='Dimethyl fumarate';3='Galtiramer acetate'; 4='Natalizumab';5='Placebo'")
 names(dataset)[names(dataset) == "logitRisk"] <- "LogitRisk"
 ##### A. The density of the risk score in the whole dataset
 #a <- ggplot(dataset, aes(x = LogitRisk))
@@ -38,44 +38,55 @@ RiskDist<-ggdensity(dataset, x = "Risk",
 S<-dataset[which(dataset$STUDYID==1),]
 K<-dataset[which(dataset$STUDYID==2),]
 L<-dataset[which(dataset$STUDYID==3),]
+M<-dataset[which(dataset$STUDYID==4),]
 
 
 #####FOR LOGIT
 a<-ggdensity(S, x = "LogitRisk",
           add = "mean", rug = TRUE, xlim=c(-4,4),
           color = "Treatment", fill = "Treatment",
-          palette = c("#0073C2FF", "#FC4E07"), xlab = "Logit Risk score for DEFINE study")
+          palette = c("blue", "yellow"), xlab = "Logit Risk score for DEFINE study")
 
 
 b<-ggdensity(K, x = "LogitRisk",
               add = "mean", rug = TRUE,xlim=c(-4,4),
               color = "Treatment", fill = "Treatment",
-              palette = c("blue", "red","green"), xlab = "Logit Risk score for CONFIRM study")
+              palette = c("blue", "red","yellow"), xlab = "Logit Risk score for CONFIRM study")
 
 c<-ggdensity(L, x = "LogitRisk",
           add = "mean", rug = TRUE,xlim=c(-4,4),
           color = "Treatment", fill = "Treatment",
-          palette = c("blue", "yellow"), xlab = "Logit Risk score for AFFIRM study")
-RandomizationLogitRisk<-ggarrange(a, b, c,
+          palette = c("green", "yellow"), xlab = "Logit Risk score for AFFIRM study")
+d<-ggdensity(M, x = "LogitRisk",
+             add = "mean", rug = TRUE,xlim=c(-4,4),
+             color = "Treatment", fill = "Treatment",
+             palette = c("#FC4E07", "yellow"), xlab = "Logit Risk score for MSCRG study")
+
+RandomizationLogitRisk<-ggarrange(a,b,c,d,
           labels = c("A", "B", "C"),
           ncol = 2, nrow = 2)
 ###FOR RISK
 a<-ggdensity(S, x = "Risk",
              add = "mean", rug = TRUE, xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
-             palette = c("#0073C2FF", "#FC4E07"), xlab = "Risk score for DEFINE study")
+             palette = c("blue", "yellow"), xlab = "Risk score for DEFINE study")
 
 
 b<-ggdensity(K, x = "Risk",
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
-             palette = c("blue", "red","green"), xlab = "Risk score for CONFIRM study")
+             palette = c("blue", "red","yellow"), xlab = "Risk score for CONFIRM study")
 
 c<-ggdensity(L, x = "Risk",
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
-             palette = c("blue", "yellow"), xlab = "Risk score for AFFIRM study")
-RandomizationRisk<-ggarrange(a, b, c,
+             palette = c("green", "yellow"), xlab = "Risk score for AFFIRM study")
+d<-ggdensity(M, x = "Risk",
+             add = "mean", rug = TRUE,xlim=c(0,1),
+             color = "Treatment", fill = "Treatment",
+             palette = c("#FC4E07", "yellow"), xlab = "Risk score for MSCRG study")
+
+RandomizationRisk<-ggarrange(a, b, c,d,
           labels = c("A", "B", "C"),
           ncol = 2, nrow = 2)
 
@@ -94,9 +105,11 @@ PrognosticRisk<-ggdensity(dataset, x = "Risk",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
           palette = c("blue", "red"), xlab = "Risk score as a prognostic factor")
-
-
-
+##Risk as prognostic factor
+summary(dataset$Risk[dataset$RELAPSE2year==1])
+summary(dataset$Risk[dataset$RELAPSE2year==0])
+t.test(dataset$Risk[dataset$RELAPSE2year==1])
+t.test(dataset$Risk[dataset$RELAPSE2year==0])
 #D. The distribution in those with true relapse and true non-relapse for each arm in each study
 
 ##logit risk
@@ -105,13 +118,13 @@ d<-ggdensity(S, x = "LogitRisk",merge=T,
           add = "mean", rug = TRUE,xlim=c(-2,2),
           color = "RELAPSE2year", fill = "Treatment",
           palette = c("blue", "red"), xlab = "Logit Risk score in DEFINE study")
-t.test(S$LogitRisk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==0])
-t.test(S$LogitRisk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==1])
+t.test(S$LogitRisk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+t.test(S$LogitRisk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
 t.test(S$LogitRisk[S$Treatment=="Placebo" & S$RELAPSE2year==0])
 t.test(S$LogitRisk[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
-summary(S$LogitRisk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==0])
-summary(S$LogitRisk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==1])
+summary(S$LogitRisk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+summary(S$LogitRisk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
 summary(S$LogitRisk[S$Treatment=="Placebo" & S$RELAPSE2year==0])
 summary(S$LogitRisk[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
@@ -121,15 +134,15 @@ e<-ggdensity(K, x = "LogitRisk",merge=T,
           add = "mean", rug = TRUE,xlim=c(-2,2),
           color = "RELAPSE2year", fill = "Treatment",
           palette = c("blue", "red", "yellow"), xlab = "Logit Risk score in CONFIRM study")
-t.test(K$LogitRisk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==0])
-t.test(K$LogitRisk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==1])
+t.test(K$LogitRisk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+t.test(K$LogitRisk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
 t.test(K$LogitRisk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
 t.test(K$LogitRisk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
 t.test(K$LogitRisk[K$Treatment=="Placebo" & K$RELAPSE2year==0])
 t.test(K$LogitRisk[K$Treatment=="Placebo" & K$RELAPSE2year==1])
 
-summary(K$LogitRisk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==0])
-summary(K$LogitRisk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==1])
+summary(K$LogitRisk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+summary(K$LogitRisk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
 summary(K$LogitRisk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
 summary(K$LogitRisk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
 summary(K$LogitRisk[K$Treatment=="Placebo" & K$RELAPSE2year==0])
@@ -158,14 +171,14 @@ S$RELAPSE2year<-as.factor(S$RELAPSE2year)
 d<-ggdensity(S, x = "Risk",merge=T,
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
-             palette = c("blue", "red"), xlab = "Risk score in DEFINE study")
-t.test(S$Risk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==0])
-t.test(S$Risk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==1])
+             palette = c("blue","yellow"), xlab = "Risk score in DEFINE study")
+t.test(S$Risk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+t.test(S$Risk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
 t.test(S$Risk[S$Treatment=="Placebo" & S$RELAPSE2year==0])
 t.test(S$Risk[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
-summary(S$Risk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==0])
-summary(S$Risk[S$Treatment=="Dimethyl fumerate" & S$RELAPSE2year==1])
+summary(S$Risk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+summary(S$Risk[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
 summary(S$Risk[S$Treatment=="Placebo" & S$RELAPSE2year==0])
 summary(S$Risk[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
@@ -175,15 +188,15 @@ e<-ggdensity(K, x = "Risk",merge=T,
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
              palette = c("blue", "red", "yellow"), xlab = "Risk score in CONFIRM study")
-t.test(K$Risk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==0])
-t.test(K$Risk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==1])
+t.test(K$Risk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+t.test(K$Risk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
 t.test(K$Risk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
 t.test(K$Risk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
 t.test(K$Risk[K$Treatment=="Placebo" & K$RELAPSE2year==0])
 t.test(K$Risk[K$Treatment=="Placebo" & K$RELAPSE2year==1])
 
-summary(K$Risk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==0])
-summary(K$Risk[K$Treatment=="Dimethyl fumerate" & K$RELAPSE2year==1])
+summary(K$Risk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+summary(K$Risk[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
 summary(K$Risk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
 summary(K$Risk[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
 summary(K$Risk[K$Treatment=="Placebo" & K$RELAPSE2year==0])
@@ -192,7 +205,7 @@ L$RELAPSE2year<-as.factor(L$RELAPSE2year)
 f<-ggdensity(L, x = "Risk",merge=T,
              add = "mean", rug = TRUE, xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
-             palette = c("blue", "red"), xlab = "Risk score in AFFIRM study")
+             palette = c("green", "yellow"), xlab = "Risk score in AFFIRM study")
 t.test(L$Risk[L$Treatment=="Natalizumab" & L$RELAPSE2year==0])
 t.test(L$Risk[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
 t.test(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==0])
@@ -203,8 +216,14 @@ summary(L$Risk[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
 summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==0])
 summary(L$Risk[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
+M$RELAPSE2year<-as.factor(M$RELAPSE2year)
+g<-ggdensity(M, x = "Risk",merge=T,
+             add = "mean", rug = TRUE,xlim=c(0,1),
+             color = "RELAPSE2year", fill = "Treatment",
+             palette = c("#FC4E07", "yellow"), xlab = "Risk score in CONFIRM study")
 
-EffectModRisk<-ggarrange(d,e,f, labels = c("A","B","C"))
+
+EffectModRisk<-ggarrange(d,e,f,g, labels = c("A","B","C","D"))
 
 #remove no needed items
 rm(a)
@@ -213,6 +232,8 @@ rm(c)
 rm(d)
 rm(e)
 rm(f)
+rm(g)
 rm(K)
 rm(L)
 rm(S)
+rm(M)
