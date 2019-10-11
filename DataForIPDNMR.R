@@ -24,7 +24,7 @@ RiskData$arm[RiskData$STUDYID==2 & RiskData$TRT01A==5]<-3
 RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==4]<-1
 RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==5]<-2
 RiskData$arm[RiskData$STUDYID==4 & RiskData$TRT01A==1]<-1
-RiskData$arm[RiskData$STUDYID==4 & RiskData$TRT01A==5]<-1
+RiskData$arm[RiskData$STUDYID==4 & RiskData$TRT01A==5]<-2
 ##new Risk & logit Risk
 Risknew<-seq(0.01,0.99,0.01)
 Risknew<-as.data.frame(Risknew)
@@ -44,7 +44,7 @@ logitmeanRisknew<-mean(logitRisknew[,1])
 ###data for jagsmodel with metarigression on logit of Risk
 jagsdataIPDNMR <- list(
   Nstudies=4,
-  Np=sum(as.numeric(table(as.numeric(as.factor(RiskData$STUDYID))))),
+  Np=nrow(RiskData),
   studyid=as.numeric(RiskData$STUDYID),
   outcome=RiskData$RELAPSE2year,
   outcomeP=PlaceboArms$Relapse2year,
@@ -59,3 +59,4 @@ jagsdataIPDNMR <- list(
   nt=5,
   ref=5
 )
+

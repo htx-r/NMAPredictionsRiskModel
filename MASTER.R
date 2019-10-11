@@ -85,13 +85,13 @@ EffectModRisk #distribution of Risk for those who relapsed and those who did not
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 #IPDNMRJAGSmodelFORlogitp <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
 #                                 n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 #IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','d','u'),model.file = modelIPDNMR,
                                 # n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
-print(IPDNMRJAGSmodel,varname=c("be","ORref","u", "d"))
+print(IPDNMRJAGSmodel,varname=c("be","ORref","u", "logitpplacebo","d"))
 
 #print(IPDNMRJAGSmodelFORlogitp)
 #credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]

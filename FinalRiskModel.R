@@ -44,12 +44,12 @@
   missingSF<-na.omit(missingSF)
   SFPCSBLmodel<-glm(SFPCSBL~., data=missingSF)
   MSCRG$SFPCSBL<-predict(SFPCSBLmodel,new=MSCRG)
-  ### input NA values to DISTWKBL - numeric
+  ### input NA values to DISTWKBL - dichotomous
   todrop<-c("TRT01A","SFPCSBL","TRELMOS","USUBJID","STUDYID","RELAPSE1year","MCDBL","BVZBL","VFT25BL","SFMCSBL","CEREBRBL","T25FWPC","NHPTMPC","PASATPC","BVTBL")
   missingDIS<-MSrelapse[, !(names(dataset) %in% todrop)]
   missingDIS<-na.omit(missingDIS)
   DISTWKBLmodel<-glm(DISTWKBL~.,family="binomial", data=missingDIS)
-  MSCRG$DISTWKBL<-predict(DISTWKBLmodel,new=MSCRG,type="response")
+  MSCRG$DISTWKBL<-rbinom(301,1,predict(DISTWKBLmodel,new=MSCRG,type="response"))
 
   ############################ Final dataset including risk #############
 
