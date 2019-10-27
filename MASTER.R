@@ -26,6 +26,8 @@ library(synthpop)
 library(pmsampsize)
 library(selectiveInference)
 library(plyr)
+library(vcd)
+library(pROC)
 #######################################################################################
 ####################################  DATA   ###########################################
 
@@ -37,71 +39,92 @@ mydatapath1="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data c
 cleanBIOGENtrials<-cleanBIOGENtrials.fun(mydatapath)
 PlaceboArms<-cleanPLACEBOtrials.fun(mydatapath1)
 adsl01<-cleanBIOGENtrials$adsl01
-### Select variables that I need- exclude variables with a huge ammount of missing values,
+###drop SENTTINEL STUDY because of combination of treatments and
+### drop ADVANCE study because does not provide information for Relapse in 2 years (only for 1 year)
+adsl<-adsl01[adsl01$STUDYID!="SENTINEL" & adsl01$STUDYID!="ADVANCE" ,]
+### Select variables that I need- exclude variables with a huge ammount of missing values (more than 50%),
 #exclude factors with just one category, exclude factors that are transformations from already existing variables)
 #exclude highly correlated variables
 ###and recode them in numerical values (e.g. Male=1, Female=0)
-MSrelapse<-numericalDataRisk.fun(adsl01)  ##final full dataset
+## transformations of continuous variables to approximate normal distribution
+MSrelapse<-numericalDataRisk.fun(adsl)  ##final full dataset
 
 #######################################################################################
-############################ RISK MODEL ###############################################
+############################ STAGE 1 - RISK MODEL ###############################################
 ######################################################################################
 source('EPVandSampleSize.R')
 ####################### CHECK DIFFERENT RISK MODELS + SHRINKAGE ###############
 
-######## Model 1 - results of Internal risk score
-InternalModel<-RiskModelSelection.fun(MSrelapse,"Internal")
-######## Model 2 - model Internal with splines to only significant non-linear continues variables
-InternalSplinesSignModel<-RiskModelSelection.fun(MSrelapse,"InternalSplinesSign")
-######  Model 3 - model Internal with Interactions
-InternalInteractionsModel<-RiskModelSelection.fun(MSrelapse,"InternalInteractions")
-#########  Model 4 - Fabio's model
-FabioModel<-RiskModelSelection.fun(MSrelapse,"Fabio")
+######## Model 1 - results of LASSO model
+LASSOModel<-RiskModels.fun(MSrelapse,"LASSOModel")
+#########  Model 2 - Results of Pellegrini's model
+FabioModel<-RiskModels.fun(MSrelapse,"FabioModel")
 
-###comparison of models to select the best one with respect to discrimination and calibration of each model
-source('ComparisonOfModels.R')
-ComparisonOfModelsTable
+###Performance table of models : discrimination and calibration
+source('BootstrapValidation.R')
+PerformanceTable
 
 
-### Chosen model (model 1, with penalized Maximum Likelihood estimation)
-## and graphs for this model
+### Calibration Plots
+#For LASSO model
+Calibrationplots.fun(model="LASSOModel")
+# For Pellegrini's model
+Calibrationplots.fun(model="FabioModel")
 
-#the final model and the risk data (with extra columns: Risk and logitRisk)
-source('FinalRiskModel.R')
-## calibration plot of the model
-source('Calibration plot.R')
+### Create a dataset that includes Risk's and logit Risk's predictions for each individual and for both models
+##ALso make treatment and studies numerical
+source("RiskData.R")
+
 ###plots of risk score
+## boxplot of both models
 source('Plots.R')
-RiskDist #distribution of Risk in the whole dataset
-RandomizationRisk  #distribution of Risk in each of the studies - randomization of risk
-PrognosticRisk #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
-EffectModRisk #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
+
+### For LASSO model
+RiskDistLASSO #distribution of Risk in the whole dataset of LASSO model
+RandomizationRiskLASSO  #distribution of Risk in each of the studies - randomization of risk for LASSO model
+PrognosticRiskLASSO #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
+EffectModRiskLASSO #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
+
+## For Fabio's Model
+
+RiskDistFabio #distribution of Risk in the whole dataset of LASSO model
+RandomizationRiskFabio  #distribution of Risk in each of the studies - randomization of risk for LASSO model
+PrognosticRiskFabio #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
+EffectModRiskFabio #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
+
 
 
 #######################################################################################
-####################### NMA PREDICTION MODEL ###############################################
+####################### STAGE 2 - NMA PREDICTION MODEL ###############################################
 ######################################################################################
 #add proper columns in the RiskData, like arm, meanRisk, etc.
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
-#IPDNMRJAGSmodelFORlogitp <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
-#                                 n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
-#IPDNMRJAGSmodel <- jags.parallel(data = jagsdataIPDNMR ,inits=NULL,parameters.to.save = c('be', 'Beta', 'ORref','d','u'),model.file = modelIPDNMR,
-                                # n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
-print(IPDNMRJAGSmodel,varname=c("be","ORref","u", "logitpplacebo","d"))
 
-#print(IPDNMRJAGSmodelFORlogitp)
+IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+                                      n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+# Results using LASSO model
+print(IPDNMRJAGSmodelLASSO,varname=c("be","ORref","u", "logitpplacebo","d"))
+# Results using Pellegrini's model
+print(IPDNMRJAGSmodelFabio,varname=c("be","ORref","u", "logitpplacebo","d"))
+
+#
 #credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
+
 # traceplots
-# 2. Create the plot
-traceplot(IPDNMRJAGSmodel$BUGSoutput,varname=c("be","ORref","u"))
-# 3. Close the file
-####plot of IPD NMR
+
+traceplot(IPDNMRJAGSmodelLASSO$BUGSoutput,varname=c("be","ORref","u"))
+traceplot(IPDNMRJAGSmodelFabio$BUGSoutput,varname=c("be","ORref","u"))
+
+####plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
-IPDplot
+#LASSO model
+IPDplotLASSO
+#Fabio model
+IPDplotFabio
 
 
 
