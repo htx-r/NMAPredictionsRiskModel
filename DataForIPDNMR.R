@@ -34,7 +34,7 @@ jagsdataIPDNMRLASSO <- list(
   Nstudies=3,
   Np=nrow(RiskData),
   studyid=as.numeric(RiskData$STUDYID),
-  outcome=as.numeric(RiskData$RELAPSE2year),
+  outcome=as.numeric(RiskData$RELAPSE2year)-1,
   outcomeP=PlaceboArms$Relapse2year,
   NpPlacebo=nrow(PlaceboArms),
   treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA)),
@@ -43,7 +43,7 @@ jagsdataIPDNMRLASSO <- list(
   logitmeanRisknew=logitmeanRisknew,
   arm=RiskData$arm,
   Risk=RiskData$logitRiskLASSO,
-  meanRisk=c(-0.5335,-0.5832,-0.5091), ##here is the mean of logit of risk
+  meanRisk=c(tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
   nt=4,
   ref=4
 )
@@ -52,7 +52,7 @@ jagsdataIPDNMRFabio <- list(
   Nstudies=3,
   Np=nrow(RiskData),
   studyid=as.numeric(RiskData$STUDYID),
-  outcome=RiskData$RELAPSE2year,
+  outcome=as.numeric(RiskData$RELAPSE2year)-1,
   outcomeP=PlaceboArms$Relapse2year,
   NpPlacebo=nrow(PlaceboArms),
   treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA)),
@@ -61,7 +61,8 @@ jagsdataIPDNMRFabio <- list(
   logitmeanRisknew=logitmeanRisknew,
   arm=RiskData$arm,
   Risk=RiskData$logitRiskFabio,
-  meanRisk=c(-0.5450,-0.5757,-0.5374), ##here is the mean of logit of risk
+  meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
+  ##here is the mean of logit of risk
   nt=4,
   ref=4
 )

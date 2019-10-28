@@ -60,6 +60,7 @@ LASSOModel<-RiskModels.fun(MSrelapse,"LASSOModel")
 #########  Model 2 - Results of Pellegrini's model
 FabioModel<-RiskModels.fun(MSrelapse,"FabioModel")
 
+###needs more than 3 hours to run! You can skip it without any problem further
 ###Performance table of models : discrimination and calibration
 source('BootstrapValidation.R')
 PerformanceTable
@@ -126,6 +127,11 @@ IPDplotLASSO
 #Fabio model
 IPDplotFabio
 
+#### predicted probabilities of relapse under both models and under each treatment
+#LASSO
+LASSOtable
+# Fabio
+Fabiotable
 
 
 ##remove list

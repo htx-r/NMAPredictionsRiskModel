@@ -25,14 +25,14 @@ Pl$Treatment<-4
 colnames(Pl)<-c("Risknew","prelapse","Treatment")
 
 ##merge data for all the treatments
-Graphdata<-rbind(DF,GA,N,Pl)
+GraphdataL<-rbind(DF,GA,N,Pl)
 
 ###Graph for IPD
-ggplot(data=Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
+ggplot(data=GraphdataL, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line()+
   geom_point()
 
-IPDplotLASSO<-ggplot(Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
+IPDplotLASSO<-ggplot(GraphdataL, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line(aes(color=Treatment))+
   geom_point(aes(color=Treatment))
 IPDplotLASSO
@@ -65,14 +65,14 @@ Pl$Treatment<-4
 colnames(Pl)<-c("Risknew","prelapse","Treatment")
 
 ##merge data for all the treatments
-Graphdata<-rbind(DF,GA,N,Pl)
+GraphdataF<-rbind(DF,GA,N,Pl)
 
 ###Graph for IPD
-ggplot(data=Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
+ggplot(data=GraphdataF, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line()+
   geom_point()
 
-IPDplotFabio<-ggplot(Graphdata, aes(x=Risknew, y=prelapse, group=Treatment)) +
+IPDplotFabio<-ggplot(GraphdataF, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line(aes(color=Treatment))+
   geom_point(aes(color=Treatment))
 IPDplotFabio

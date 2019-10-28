@@ -422,3 +422,37 @@ rm(K)
 rm(L)
 rm(S)
 
+mean1<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==1)])[4]*100
+mean2<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==2)])[4]*100
+mean3<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==3)])[4]*100
+
+mean1low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==1)])[4]*100
+mean2low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==2)])[4]*100
+mean3low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==3)])[4]*100
+
+mean1high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==1)])[4]*100
+mean2high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==2)])[4]*100
+mean3high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==3)])[4]*100
+
+LASSOtable<-data.frame("Average predicted relapse "=c(mean1, mean2, mean3), "Low-isk patients' (<25%) predicted relapse"=c(mean1low,mean2low,mean3low)
+                       , "High-isk patients' (>=75%) predicted relapse "=c(mean1high,mean2high,mean3high))
+names(LASSOtable)<-c("Average predicted relapse %","Low-isk patients' (<25%) predicted relapse %","High-isk patients' (>=75%) predicted relapse %")
+rownames(LASSOtable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
+
+
+mean1f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==1)])[4]*100
+mean2f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==2)])[4]*100
+mean3f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==3)])[4]*100
+
+mean1lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==1)])[4]*100
+mean2lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==2)])[4]*100
+mean3lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==3)])[4]*100
+
+mean1highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==1)])[4]*100
+mean2highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==2)])[4]*100
+mean3highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==3)])[4]*100
+
+Fabiotable<-data.frame("Average predicted relapse"=c(mean1f, mean2f, mean3f), "Low-isk patients' (<25%) predicted relapse"=c(mean1lowf,mean2lowf,mean3lowf)
+                       , "High-isk patients' (>=75%) predicted relapse"=c(mean1highf,mean2highf,mean3highf))
+names(Fabiotable)<-c("Average predicted relapse %","Low-isk patients' (<25%) predicted relapse %","High-isk patients' (>=75%) predicted relapse %")
+rownames(Fabiotable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
