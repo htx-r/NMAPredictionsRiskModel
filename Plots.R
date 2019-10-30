@@ -11,6 +11,7 @@ names(dataset)[names(dataset) == "TRT01A"] <- "Treatment"
 dataset$Treatment<-recode(dataset$Treatment,"1='Dimethyl fumarate';2='Galtiramer acetate'; 3='Natalizumab';4='Placebo'")
 names(dataset)[names(dataset) == "logitRiskLASSO"] <- "LogitRiskLASSO"
 names(dataset)[names(dataset) == "logitRiskFabio"] <- "LogitRiskFabio"
+names(dataset)[names(dataset) == "RiskFabio"] <- "RiskPellegrini"
 ##### A. The density of the risk score in the whole dataset
 #a <- ggplot(dataset, aes(x = LogitRisk))
 # y axis scale = ..density.. (default behaviour)
@@ -32,7 +33,7 @@ LogitRiskLASSO<-ggdensity(dataset, x = "LogitRiskLASSO",
 summary(dataset$RiskLASSO)
 RiskDistLASSO<-ggdensity(dataset, x = "RiskLASSO",
                     fill = "#0073C2FF", color = "#0073C2FF",
-                    add = "mean", rug = TRUE)
+                    add = "mean", rug = TRUE, xlim=c(0,0.75))
 
 
 ##### B. The distribution per arm for each study
@@ -98,7 +99,7 @@ PrognosticLogitRiskLASSO<-ggdensity(dataset, x = "LogitRiskLASSO",
 PrognosticRiskLASSO<-ggdensity(dataset, x = "RiskLASSO",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
-          palette = c("blue", "yellow"), xlab = "Risk score as a prognostic factor")
+          palette = c("blue", "yellow"), xlim=c(0,0.75),xlab = "Risk score as a prognostic factor")
 ##Risk as prognostic factor
 summary(dataset$RiskLASSO[dataset$RELAPSE2year==1])
 summary(dataset$RiskLASSO[dataset$RELAPSE2year==0])
@@ -226,10 +227,10 @@ LogitRiskLASSOFabio<-ggdensity(dataset, x = "LogitRiskFabio",
                           fill = "#0073C2FF", color = "#0073C2FF",
                           add = "mean", rug = TRUE)
 #risk
-summary(dataset$RiskFabio)
-RiskDistFabio<-ggdensity(dataset, x = "RiskFabio",
+summary(dataset$RiskPellegrini)
+RiskDistFabio<-ggdensity(dataset, x = "RiskPellegrini",
                          fill = "#0073C2FF", color = "#0073C2FF",
-                         add = "mean", rug = TRUE)
+                         add = "mean", rug = TRUE, xlim=c(0,0.75))
 
 
 ##### B. The distribution per arm for each study
@@ -261,18 +262,18 @@ RandomizationLogitRiskFabio<-ggarrange(a,b,c,
                                        labels = c("A", "B", "C"),
                                        ncol = 2, nrow = 2)
 ###FOR RISK
-a<-ggdensity(S, x = "RiskFabio",
+a<-ggdensity(S, x = "RiskPellegrini",
              add = "mean", rug = TRUE, xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
              palette = c("blue", "red"), xlab = "Risk score for DEFINE study")
 
 
-b<-ggdensity(K, x = "RiskFabio",
+b<-ggdensity(K, x = "RiskPellegrini",
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
              palette = c("blue", "yellow","red"), xlab = "Risk score for CONFIRM study")
 
-c<-ggdensity(L, x = "RiskFabio",
+c<-ggdensity(L, x = "RiskPellegrini",
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "Treatment", fill = "Treatment",
              palette = c("grey", "red"), xlab = "Risk score for AFFIRM study")
@@ -292,15 +293,15 @@ PrognosticLogitRiskFabio<-ggdensity(dataset, x = "LogitRiskFabio",
                                     palette = c("blue", "yellow"), xlab = "Logit Risk score as a prognostic factor")
 
 #Risk
-PrognosticRiskFabio<-ggdensity(dataset, x = "RiskFabio",
+PrognosticRiskFabio<-ggdensity(dataset, x = "RiskPellegrini",
                                add = "mean", rug = TRUE,
                                color = "RELAPSE2year", fill = "RELAPSE2year",
-                               palette = c("blue", "yellow"), xlab = "Risk score as a prognostic factor")
+                               palette = c("blue", "yellow"),xlim=c(0,0.75), xlab = "Risk score as a prognostic factor")
 ##Risk as prognostic factor
-summary(dataset$RiskFabio[dataset$RELAPSE2year==1])
-summary(dataset$RiskFabio[dataset$RELAPSE2year==0])
-t.test(dataset$RiskFabio[dataset$RELAPSE2year==1])
-t.test(dataset$RiskFabio[dataset$RELAPSE2year==0])
+summary(dataset$RiskPellegrini[dataset$RELAPSE2year==1])
+summary(dataset$RiskPellegrini[dataset$RELAPSE2year==0])
+t.test(dataset$RiskPellegrini[dataset$RELAPSE2year==1])
+t.test(dataset$RiskPellegrini[dataset$RELAPSE2year==0])
 #D. The distribution in those with true relapse and true non-relapse for each arm in each study
 
 ##logit risk
@@ -359,58 +360,58 @@ EffectModLogitRiskFabio<-ggarrange(d,e,f, labels = c("A","B","C"))
 
 ###Risk
 S$RELAPSE2year<-as.factor(S$RELAPSE2year)
-d<-ggdensity(S, x = "RiskFabio",merge=T,
+d<-ggdensity(S, x = "RiskPellegrini",merge=T,
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
              palette = c("blue","red"), xlab = "Risk score in DEFINE study")
-t.test(S$RiskFabio[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
-t.test(S$RiskFabio[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
-t.test(S$RiskFabio[S$Treatment=="Placebo" & S$RELAPSE2year==0])
-t.test(S$RiskFabio[S$Treatment=="Placebo" & S$RELAPSE2year==1])
+t.test(S$RiskPellegrini[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+t.test(S$RiskPellegrini[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
+t.test(S$RiskPellegrini[S$Treatment=="Placebo" & S$RELAPSE2year==0])
+t.test(S$RiskPellegrini[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
-summary(S$RiskFabio[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
-summary(S$RiskFabio[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
-summary(S$RiskFabio[S$Treatment=="Placebo" & S$RELAPSE2year==0])
-summary(S$RiskFabio[S$Treatment=="Placebo" & S$RELAPSE2year==1])
+summary(S$RiskPellegrini[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==0])
+summary(S$RiskPellegrini[S$Treatment=="Dimethyl fumarate" & S$RELAPSE2year==1])
+summary(S$RiskPellegrini[S$Treatment=="Placebo" & S$RELAPSE2year==0])
+summary(S$RiskPellegrini[S$Treatment=="Placebo" & S$RELAPSE2year==1])
 
 
 K$RELAPSE2year<-as.factor(K$RELAPSE2year)
-e<-ggdensity(K, x = "RiskFabio",merge=T,
+e<-ggdensity(K, x = "RiskPellegrini",merge=T,
              add = "mean", rug = TRUE,xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
              palette = c("blue", "yellow", "red"), xlab = "Risk score in CONFIRM study")
-t.test(K$RiskFabio[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
-t.test(K$RiskFabio[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
-t.test(K$RiskFabio[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
-t.test(K$RiskFabio[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
-t.test(K$RiskFabio[K$Treatment=="Placebo" & K$RELAPSE2year==0])
-t.test(K$RiskFabio[K$Treatment=="Placebo" & K$RELAPSE2year==1])
+t.test(K$RiskPellegrini[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+t.test(K$RiskPellegrini[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
+t.test(K$RiskPellegrini[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
+t.test(K$RiskPellegrini[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
+t.test(K$RiskPellegrini[K$Treatment=="Placebo" & K$RELAPSE2year==0])
+t.test(K$RiskPellegrini[K$Treatment=="Placebo" & K$RELAPSE2year==1])
 
-summary(K$RiskFabio[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
-summary(K$RiskFabio[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
-summary(K$RiskFabio[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
-summary(K$RiskFabio[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
-summary(K$RiskFabio[K$Treatment=="Placebo" & K$RELAPSE2year==0])
-summary(K$RiskFabio[K$Treatment=="Placebo" & K$RELAPSE2year==1])
+summary(K$RiskPellegrini[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==0])
+summary(K$RiskPellegrini[K$Treatment=="Dimethyl fumarate" & K$RELAPSE2year==1])
+summary(K$RiskPellegrini[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==0])
+summary(K$RiskPellegrini[K$Treatment=="Galtiramer acetate" & K$RELAPSE2year==1])
+summary(K$RiskPellegrini[K$Treatment=="Placebo" & K$RELAPSE2year==0])
+summary(K$RiskPellegrini[K$Treatment=="Placebo" & K$RELAPSE2year==1])
 L$RELAPSE2year<-as.factor(L$RELAPSE2year)
-f<-ggdensity(L, x = "RiskFabio",merge=T,
+f<-ggdensity(L, x = "RiskPellegrini",merge=T,
              add = "mean", rug = TRUE, xlim=c(0,1),
              color = "RELAPSE2year", fill = "Treatment",
              palette = c("gray", "red"), xlab = "Risk score in AFFIRM study")
-t.test(L$RiskFabio[L$Treatment=="Natalizumab" & L$RELAPSE2year==0])
-t.test(L$RiskFabio[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
-t.test(L$RiskFabio[L$Treatment=="Placebo" & L$RELAPSE2year==0])
-t.test(L$RiskFabio[L$Treatment=="Placebo" & L$RELAPSE2year==1])
+t.test(L$RiskPellegrini[L$Treatment=="Natalizumab" & L$RELAPSE2year==0])
+t.test(L$RiskPellegrini[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
+t.test(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==0])
+t.test(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
-summary(L$RiskFabio[L$Treatment=="Natalizumab" & L$RELAPSE2year==0])
-summary(L$RiskFabio[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
-summary(L$RiskFabio[L$Treatment=="Placebo" & L$RELAPSE2year==0])
-summary(L$RiskFabio[L$Treatment=="Placebo" & L$RELAPSE2year==1])
+summary(L$RiskPellegrini[L$Treatment=="Natalizumab" & L$RELAPSE2year==0])
+summary(L$RiskPellegrini[L$Treatment=="Natalizumab" & L$RELAPSE2year==1])
+summary(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==0])
+summary(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 
 EffectModRiskFabio<-ggarrange(d,e,f,labels = c("A","B","C"))
 
-boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,col=c("red","blue"), names = c("LASSO","Fabio"))
+boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,col=c("red","blue"), names = c("LASSO","Pellegrini"))
 #remove no needed items
 rm(a)
 rm(b)
@@ -422,37 +423,3 @@ rm(K)
 rm(L)
 rm(S)
 
-mean1<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==1)])[4]*100
-mean2<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==2)])[4]*100
-mean3<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==3)])[4]*100
-
-mean1low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==1)])[4]*100
-mean2low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==2)])[4]*100
-mean3low<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse<0.25 & GraphdataL$Treatment==3)])[4]*100
-
-mean1high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==1)])[4]*100
-mean2high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==2)])[4]*100
-mean3high<- summary(GraphdataL$prelapse[which(GraphdataL$prelapse>0.75 & GraphdataL$Treatment==3)])[4]*100
-
-LASSOtable<-data.frame("Average predicted relapse "=c(mean1, mean2, mean3), "Low-isk patients' (<25%) predicted relapse"=c(mean1low,mean2low,mean3low)
-                       , "High-isk patients' (>=75%) predicted relapse "=c(mean1high,mean2high,mean3high))
-names(LASSOtable)<-c("Average predicted relapse %","Low-isk patients' (<25%) predicted relapse %","High-isk patients' (>=75%) predicted relapse %")
-rownames(LASSOtable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
-
-
-mean1f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==1)])[4]*100
-mean2f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==2)])[4]*100
-mean3f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==3)])[4]*100
-
-mean1lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==1)])[4]*100
-mean2lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==2)])[4]*100
-mean3lowf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse<0.25 & GraphdataF$Treatment==3)])[4]*100
-
-mean1highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==1)])[4]*100
-mean2highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==2)])[4]*100
-mean3highf<- summary(GraphdataF$prelapse[which(GraphdataF$prelapse>0.75 & GraphdataF$Treatment==3)])[4]*100
-
-Fabiotable<-data.frame("Average predicted relapse"=c(mean1f, mean2f, mean3f), "Low-isk patients' (<25%) predicted relapse"=c(mean1lowf,mean2lowf,mean3lowf)
-                       , "High-isk patients' (>=75%) predicted relapse"=c(mean1highf,mean2highf,mean3highf))
-names(Fabiotable)<-c("Average predicted relapse %","Low-isk patients' (<25%) predicted relapse %","High-isk patients' (>=75%) predicted relapse %")
-rownames(Fabiotable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")

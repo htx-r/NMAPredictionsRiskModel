@@ -67,9 +67,10 @@ modelIPDNMR<-function(){
 
    for (i in 1:99){
     for(j in 1:nt){
-    logitp[i,j]<-logitpplacebo+d[j]+Beta*(logitRisknew[i,1]-logitmeanRisknew)+be[j]*(logitRisknew[i,1]-logitmeanRisknew)
+    logitp[i,j]<-logitpplacebo+ d[j]+ Beta*(logitRisknew[i,1]-logitmeanRisknew)+ be[j]*(logitRisknew[i,1]-logitmeanRisknew)
     }
   }
+
 
   #for (i in 1:99){
    # for(j in 1:nt){

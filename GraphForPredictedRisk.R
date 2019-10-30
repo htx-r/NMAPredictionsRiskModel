@@ -1,4 +1,8 @@
-################# Script for Plot of predicted Risk #########################
+################# Script for Plots of predicted Risks and ORs#########################
+
+######################################################################################################
+###################           Predicted risk           ################################################
+##########################################################################################################
 
 ########################################## FOR LASSO MODEL   ######################################
 ###predicted risk= expit(logit p risk)
@@ -8,33 +12,36 @@ p<-expit(IPDNMRJAGSmodelLASSO$BUGSoutput$mean$logitp)
 
 ####preperation for the graph
 ###For Dymethyl fumarate- Risk & propability to relapse
-DF<-cbind(Risknew,p[,1])
-DF$Treatment<-1
-colnames(DF)<-c("Risknew","prelapse","Treatment")
+DFL<-cbind(Risknew,p[,1])
+DFL$Treatment<-1
+colnames(DFL)<-c("Risknew","prelapse","Treatment")
 ##For Glatimarer acetate  - Risk & propability to relapse
-GA<-cbind(Risknew,p[,2])
-GA$Treatment<-2
-colnames(GA)<-c("Risknew","prelapse","Treatment")
+GAL<-cbind(Risknew,p[,2])
+GAL$Treatment<-2
+colnames(GAL)<-c("Risknew","prelapse","Treatment")
 ##For Natalizumab acetate - Risk & propability to relapse
-N<-cbind(Risknew,p[,3])
-N$Treatment<-3
-colnames(N)<-c("Risknew","prelapse","Treatment")
+NL<-cbind(Risknew,p[,3])
+NL$Treatment<-3
+colnames(NL)<-c("Risknew","prelapse","Treatment")
 ##For Placebo - Risk & propability to relapse
-Pl<-cbind(Risknew,p[,4])
-Pl$Treatment<-4
-colnames(Pl)<-c("Risknew","prelapse","Treatment")
+PlL<-cbind(Risknew,p[,4])
+PlL$Treatment<-4
+colnames(PlL)<-c("Risknew","prelapse","Treatment")
 
 ##merge data for all the treatments
-GraphdataL<-rbind(DF,GA,N,Pl)
+GraphdataL<-rbind(DFL,GAL,NL,PlL)
 
 ###Graph for IPD
 ggplot(data=GraphdataL, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line()+
-  geom_point()
+  geom_point()+
+  geom_vline(xintercept=0.1968, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.6641, linetype="dashed", color = "red")
 
 IPDplotLASSO<-ggplot(GraphdataL, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line(aes(color=Treatment))+
-  geom_point(aes(color=Treatment))
+  geom_point(aes(color=Treatment))+geom_vline(xintercept=0.1968, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.6641, linetype="dashed", color = "red")
 IPDplotLASSO
 
 ######################################################################################################
@@ -48,33 +55,198 @@ p<-expit(IPDNMRJAGSmodelFabio$BUGSoutput$mean$logitp)
 
 ####preperation for the graph
 ###For Dymethyl fumarate- Risk & propability to relapse
-DF<-cbind(Risknew,p[,1])
-DF$Treatment<-1
-colnames(DF)<-c("Risknew","prelapse","Treatment")
+DFF<-cbind(Risknew,p[,1])
+DFF$Treatment<-1
+colnames(DFF)<-c("Risknew","prelapse","Treatment")
 ##For Glatimarer acetate  - Risk & propability to relapse
-GA<-cbind(Risknew,p[,2])
-GA$Treatment<-2
-colnames(GA)<-c("Risknew","prelapse","Treatment")
+GAF<-cbind(Risknew,p[,2])
+GAF$Treatment<-2
+colnames(GAF)<-c("Risknew","prelapse","Treatment")
 ##For Natalizumab acetate - Risk & propability to relapse
-N<-cbind(Risknew,p[,3])
-N$Treatment<-3
-colnames(N)<-c("Risknew","prelapse","Treatment")
+NF<-cbind(Risknew,p[,3])
+NF$Treatment<-3
+colnames(NF)<-c("Risknew","prelapse","Treatment")
 ##For Placebo - Risk & propability to relapse
-Pl<-cbind(Risknew,p[,4])
-Pl$Treatment<-4
-colnames(Pl)<-c("Risknew","prelapse","Treatment")
+PlF<-cbind(Risknew,p[,4])
+PlF$Treatment<-4
+colnames(PlF)<-c("Risknew","prelapse","Treatment")
 
 ##merge data for all the treatments
-GraphdataF<-rbind(DF,GA,N,Pl)
+GraphdataF<-rbind(DFF,GAF,NF,PlF)
 
 ###Graph for IPD
 ggplot(data=GraphdataF, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line()+
-  geom_point()
+  geom_point()+geom_vline(xintercept=0.05113, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.72461, linetype="dashed", color = "red")
 
 IPDplotFabio<-ggplot(GraphdataF, aes(x=Risknew, y=prelapse, group=Treatment)) +
   geom_line(aes(color=Treatment))+
-  geom_point(aes(color=Treatment))
+  geom_point(aes(color=Treatment))+geom_vline(xintercept=0.05113, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.72461, linetype="dashed", color = "red")
 IPDplotFabio
+
+######################################################################################################
+###################           OR          ################################################
+##########################################################################################################
+
+##################### LASSO model ################################
+
+pl<-IPDNMRJAGSmodelLASSO$BUGSoutput$mean$logitp
+
+####preperation for the graph
+###For Dymethyl fumarate- Risk & propability to relapse
+DFL_OR<-cbind(Risknew,exp(pl[,1]-pl[,4]))
+DFL_OR$Treatment<-1
+colnames(DFL_OR)<-c("Risknew","OR","Treatment")
+##For Glatimarer acetate  - Risk & propability to relapse
+GAL_OR<-cbind(Risknew,exp(pl[,2]-pl[,4]))
+GAL_OR$Treatment<-2
+colnames(GAL_OR)<-c("Risknew","OR","Treatment")
+##For Natalizumab acetate - Risk & propability to relapse
+NL_OR<-cbind(Risknew,exp(pl[,3]-pl[,4]))
+NL_OR$Treatment<-3
+colnames(NL_OR)<-c("Risknew","OR","Treatment")
+##For Placebo - Risk & propability to relapse
+PlL_OR<-cbind(Risknew,exp(pl[,4]-pl[,4]))
+PlL_OR$Treatment<-4
+colnames(PlL_OR)<-c("Risknew","OR","Treatment")
+
+##merge data for all the treatments
+GraphdataL_OR<-rbind(DFL_OR,GAL_OR,NL_OR,PlL_OR)
+
+###Graph for IPD
+ggplot(data=GraphdataL_OR, aes(x=Risknew, y=OR, group=Treatment)) +
+  geom_line()+
+  geom_point()+geom_vline(xintercept=0.1968, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.6641, linetype="dashed", color = "red")
+
+IPDplotLASSO_OR<-ggplot(GraphdataL_OR, aes(x=Risknew, y=OR, group=Treatment)) +
+  geom_line(aes(color=Treatment))+
+  geom_point(aes(color=Treatment))+geom_vline(xintercept=0.1968, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.6641, linetype="dashed", color = "red")
+IPDplotLASSO_OR
+
+######################################################################################################
+
+################################# For Fabio's model #################################################
+
+###predicted risk= expit(logit p risk)
+pf<-IPDNMRJAGSmodelFabio$BUGSoutput$mean$logitp
+
+####preperation for the graph
+###For Dymethyl fumarate- Risk & propability to relapse
+DF_OR<-cbind(Risknew,exp(pf[,1]-pf[,4]))
+DF_OR$Treatment<-1
+colnames(DF_OR)<-c("Risknew","OR","Treatment")
+##For Glatimarer acetate  - Risk & propability to relapse
+GA_OR<-cbind(Risknew,exp(pf[,2]-pf[,4]))
+GA_OR$Treatment<-2
+colnames(GA_OR)<-c("Risknew","OR","Treatment")
+##For Natalizumab acetate - Risk & propability to relapse
+N_OR<-cbind(Risknew,exp(pf[,3]-pf[,4]))
+N_OR$Treatment<-3
+colnames(N_OR)<-c("Risknew","OR","Treatment")
+##For Placebo - Risk & propability to relapse
+Pl_OR<-cbind(Risknew,exp(pf[,4]-pf[,4]))
+Pl_OR$Treatment<-4
+colnames(Pl_OR)<-c("Risknew","OR","Treatment")
+
+##merge data for all the treatments
+GraphdataF_OR<-rbind(DF_OR,GA_OR,N_OR,Pl_OR)
+
+###Graph for IPD
+ggplot(data=GraphdataF_OR, aes(x=Risknew, y=OR, group=Treatment)) +
+  geom_line()+
+  geom_point()+geom_vline(xintercept=0.05113, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.72461, linetype="dashed", color = "red")
+
+IPDplotFabio_OR<-ggplot(GraphdataF_OR, aes(x=Risknew, y=OR, group=Treatment)) +
+  geom_line(aes(color=Treatment))+
+  geom_point(aes(color=Treatment))+geom_vline(xintercept=0.05113, linetype="dashed", color = "red")+
+  geom_vline(xintercept=0.72461, linetype="dashed", color = "red")
+IPDplotFabio_OR
+
+
+######################   TABLES OF predicted risks by risk-group ###################################
+
+mean1<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==1)])[4]*100
+mean2<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==2)])[4]*100
+mean3<- summary(GraphdataL$prelapse[which(GraphdataL$Treatment==3)])[4]*100
+
+mean1low<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew<0.325 & GraphdataL$Treatment==1)])[4]*100
+mean2low<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew<0.325 & GraphdataL$Treatment==2)])[4]*100
+mean3low<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew<0.325 & GraphdataL$Treatment==3)])[4]*100
+
+mean1high<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew>0.5 & GraphdataL$Treatment==1)])[4]*100
+mean2high<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew>0.5 & GraphdataL$Treatment==2)])[4]*100
+mean3high<- summary(GraphdataL$prelapse[which(GraphdataL$Risknew>0.5 & GraphdataL$Treatment==3)])[4]*100
+
+LASSOtable<-data.frame("Average predicted relapse "=c(mean1, mean2, mean3), "Low-isk patients' (<25%) predicted relapse"=c(mean1low,mean2low,mean3low)
+                       , "High-isk patients' (>=75%) predicted relapse "=c(mean1high,mean2high,mean3high))
+names(LASSOtable)<-c("Average predicted relapse %","Low-isk patients' (<32.5%) predicted relapse %","High-isk patients' (>50%) predicted relapse %")
+rownames(LASSOtable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
+
+
+mean1f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==1)])[4]*100
+mean2f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==2)])[4]*100
+mean3f<- summary(GraphdataF$prelapse[which(GraphdataF$Treatment==3)])[4]*100
+
+mean1lowf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew<0.325 & GraphdataF$Treatment==1)])[4]*100
+mean2lowf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew<0.325 & GraphdataF$Treatment==2)])[4]*100
+mean3lowf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew<0.325 & GraphdataF$Treatment==3)])[4]*100
+
+mean1highf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew>0.5 & GraphdataF$Treatment==1)])[4]*100
+mean2highf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew>0.5 & GraphdataF$Treatment==2)])[4]*100
+mean3highf<- summary(GraphdataF$prelapse[which(GraphdataF$Risknew>0.5 & GraphdataF$Treatment==3)])[4]*100
+
+Fabiotable<-data.frame("Average predicted relapse"=c(mean1f, mean2f, mean3f), "Low-isk patients' (<25%) predicted relapse"=c(mean1lowf,mean2lowf,mean3lowf)
+                       , "High-isk patients' (>=75%) predicted relapse"=c(mean1highf,mean2highf,mean3highf))
+names(Fabiotable)<-c("Average predicted relapse %","Low-isk patients' (<32.5%) predicted relapse %","High-isk patients' (>50%) predicted relapse %")
+rownames(Fabiotable)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
+
+
+
+######################   TABLES OF ORs by risk-group ###################################
+
+mean1OR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Treatment==1)])[4]
+mean2OR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Treatment==2)])[4]
+mean3OR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Treatment==3)])[4]
+
+mean1lowOR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Risknew<0.325 & GraphdataL_OR$Treatment==1)])[4]
+mean2lowOR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Risknew<0.325 & GraphdataL_OR$Treatment==2)])[4]
+mean3lowOR<- summary(GraphdataL_OR$OR[which(GraphdataL$Risknew<0.325 & GraphdataL_OR$Treatment==3)])[4]
+
+mean1highOR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Risknew>0.5 & GraphdataL_OR$Treatment==1)])[4]
+mean2highOR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Risknew>0.5 & GraphdataL_OR$Treatment==2)])[4]
+mean3highOR<- summary(GraphdataL_OR$OR[which(GraphdataL_OR$Risknew>0.5 & GraphdataL_OR$Treatment==3)])[4]
+
+LASSOtableOR<-data.frame("Average OR "=c(mean1OR, mean2OR, mean3OR), "Low-isk patients' (<25%) mean OR"=c(mean1lowOR,mean2lowOR,mean3lowOR)
+                       , "High-isk patients' (>=75%) predicted relapse "=c(mean1highOR,mean2highOR,mean3highOR))
+names(LASSOtableOR)<-c("Average OR","Low-isk patients' (<32.5%) OR","High-isk patients' (>50%) OR ")
+rownames(LASSOtableOR)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
+
+
+mean1ORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Treatment==1)])[4]
+mean2ORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Treatment==2)])[4]
+mean3ORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Treatment==3)])[4]
+
+mean1lowORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Risknew<0.325 & GraphdataF_OR$Treatment==1)])[4]
+mean2lowORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Risknew<0.325 & GraphdataF_OR$Treatment==2)])[4]
+mean3lowORF<- summary(GraphdataF_OR$OR[which(GraphdataF$Risknew<0.325 & GraphdataF_OR$Treatment==3)])[4]
+
+mean1highORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Risknew>0.5 & GraphdataF_OR$Treatment==1)])[4]
+mean2highORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Risknew>0.5 & GraphdataF_OR$Treatment==2)])[4]
+mean3highORF<- summary(GraphdataF_OR$OR[which(GraphdataF_OR$Risknew>0.5 & GraphdataF_OR$Treatment==3)])[4]
+
+FabiotableOR<-data.frame("Average OR "=c(mean1ORF, mean2ORF, mean3ORF), "Low-isk patients' (<25%) mean OR"=c(mean1lowORF,mean2lowORF,mean3lowORF)
+                         , "High-isk patients' (>=75%) predicted relapse "=c(mean1highORF,mean2highORF,mean3highORF))
+names(FabiotableOR)<-c("Average OR","Low-isk patients' (<32.5%) OR","High-isk patients' (>50%) OR ")
+rownames(FabiotableOR)<-c("Dymethyl fumarate","Glatiramer acetate","Natalizumab")
+
+
+
+
+
 
 

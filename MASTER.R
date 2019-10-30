@@ -93,8 +93,8 @@ RandomizationRiskFabio  #distribution of Risk in each of the studies - randomiza
 PrognosticRiskFabio #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
 EffectModRiskFabio #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
 
-
-
+ggarrange(RiskDistLASSO,RiskDistFabio,labels = c("LASSO","Pellegrini"), ncol = 1, nrow=2)
+ggarrange(PrognosticRiskLASSO,PrognosticRiskFabio,labels = c("LASSO","Pellegrini"), ncol = 1, nrow=2)
 #######################################################################################
 ####################### STAGE 2 - NMA PREDICTION MODEL ###############################################
 ######################################################################################
@@ -102,15 +102,15 @@ EffectModRiskFabio #distribution of Risk for those who relapsed and those who di
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp','logOR'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp','logOR'),model.file = modelIPDNMR,
                                       n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 # Results using LASSO model
-print(IPDNMRJAGSmodelLASSO,varname=c("be","ORref","u", "logitpplacebo","d"))
+print(IPDNMRJAGSmodelLASSO,varname=c("be","ORref","u","d"))
 # Results using Pellegrini's model
-print(IPDNMRJAGSmodelFabio,varname=c("be","ORref","u", "logitpplacebo","d"))
+print(IPDNMRJAGSmodelFabio,varname=c("be","ORref","u","d"))
 
 #
 #credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
@@ -122,17 +122,33 @@ traceplot(IPDNMRJAGSmodelFabio$BUGSoutput,varname=c("be","ORref","u"))
 
 ####plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
+
+####plots of predicted probability of relapse
 #LASSO model
 IPDplotLASSO
-#Fabio model
+#Pellegrini's model
 IPDplotFabio
+##### plots of ORs
+#LASSO model
+IPDplotLASSO_OR
+#Pellegrini's model
+IPDplotFabio_OR
 
-#### predicted probabilities of relapse under both models and under each treatment
+ggarrange(IPDplotLASSO,IPDplotLASSO_OR,IPDplotFabio,IPDplotFabio_OR,labels = c("LASSO probabilities","LASSO ORs","Pellegrini probabilities","Pellegrini ORs"), ncol = 2, nrow=2)
+
+
+ggarrange(IPDplotLASSO,IPDplotLASSO_OR,labels = c("LASSO probabilities","LASSO ORs"), ncol = 1, nrow=2)
+
+#### predicted probabilities of relapse under both models and under each treatment by risk groups
 #LASSO
 LASSOtable
 # Fabio
 Fabiotable
-
+#### OR of relapse under both models and under each treatment by risk groups
+#LASSO
+LASSOtableOR
+# Fabio
+FabiotableOR
 
 ##remove list
 rm(list=ls())
