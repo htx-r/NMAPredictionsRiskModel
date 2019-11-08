@@ -411,7 +411,7 @@ summary(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 EffectModRiskFabio<-ggarrange(d,e,f,labels = c("A","B","C"))
 
-boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,col=c("red","blue"), names = c("LASSO","Pellegrini"))
+boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,ylab=c("Baseline Risk score"), names = c("LASSO-Model","Pellegrini-Model"))
 #remove no needed items
 rm(a)
 rm(b)
