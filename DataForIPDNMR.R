@@ -40,7 +40,8 @@ jagsdataIPDNMRLASSO <- list(
   treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA)),
   na=c(2,3,2),
   logitRisknew=logitRisknew,
-  logitmeanRisknew=logitmeanRisknew,
+  logitmeanRisknew=-0.545,
+  Nnew=99,
   arm=RiskData$arm,
   Risk=RiskData$logitRiskLASSO,
   meanRisk=c(tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskLASSO, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
@@ -58,7 +59,8 @@ jagsdataIPDNMRFabio <- list(
   treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA)),
   na=c(2,3,2),
   logitRisknew=logitRisknew,
-  logitmeanRisknew=logitmeanRisknew,
+  logitmeanRisknew=-0.545,
+  Nnew=99,
   arm=RiskData$arm,
   Risk=RiskData$logitRiskFabio,
   meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk

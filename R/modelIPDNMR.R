@@ -63,18 +63,17 @@ modelIPDNMR<-function(){
 
   for(j in 1:nt){ORref[j]<- exp(d[j] - d[ref])}
 
- ##### calculation of predicted risk to patients
+  ##### calculation of predicted risk to new patients
 
-   for (i in 1:99){
+  for (i in 1:Nnew){
     for(j in 1:nt){
-    logitp[i,j]<-logitpplacebo+ d[j]+ Beta*(logitRisknew[i,1]-logitmeanRisknew)+ be[j]*(logitRisknew[i,1]-logitmeanRisknew)
+      logitp[i,j]<-logitpplacebo+ d[j]+ Beta*(logitRisknew[i,1]-logitmeanRisknew)+ be[j]*(logitRisknew[i,1]-logitmeanRisknew)
     }
   }
 
 
   #for (i in 1:99){
-   # for(j in 1:nt){
-    #  p[i,j]<-exp(logitp[i,j])/(1+exp(logitp[i,j]))
-    #}
-  }
-
+  # for(j in 1:nt){
+  #  p[i,j]<-exp(logitp[i,j])/(1+exp(logitp[i,j]))
+  #}
+}
