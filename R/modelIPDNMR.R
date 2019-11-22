@@ -41,13 +41,13 @@ modelIPDNMR<-function(){
   be[ref] <- 0
 
   for (k in 1:(ref-1)){
-    d[k] ~ dnorm(0, 0.01)
-    be[k] ~ dnorm(0, 0.01)
+    d[k] ~ dnorm(0, 0.001)
+    be[k] ~ dnorm(0, 0.001)
 
   }
   for (k in (ref+1):nt){
-    d[k] ~ dnorm(0, 0.01)
-    be[k] ~ dnorm(0, 0.01)
+    d[k] ~ dnorm(0, 0.001)
+    be[k] ~ dnorm(0, 0.001)
 
 
   }
@@ -59,7 +59,7 @@ modelIPDNMR<-function(){
     logit(pplacebo[i])<-logitpplacebo
   }
   #prior for logitpplacebo
-  logitpplacebo~dnorm(0,0.01)
+  logitpplacebo~dnorm(0,0.001)
 
   for(j in 1:nt){ORref[j]<- exp(d[j] - d[ref])}
 

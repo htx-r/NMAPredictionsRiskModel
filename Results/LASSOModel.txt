@@ -1,0 +1,39 @@
+$discrimination
+[1] 0.6344773
+
+$calibration
+[1] 0.922107
+
+$lassomodel
+Logistic Regression Model
+ 
+ lrm(formula = RELAPSE2year ~ AGE + WEIGHTBL + EDSSBL + RLPS1YR + 
+     PRMSGR + REGION + GDVOLBL + SFPCSBL + DISTWKBL, data = X, 
+     x = TRUE, y = TRUE, linear.predictors = T)
+ 
+                       Model Likelihood     Discrimination    Rank Discrim.    
+                          Ratio Test           Indexes           Indexes       
+ Obs          2000    LR chi2     143.21    R2       0.094    C       0.655    
+  0           1258    d.f.            12    g        0.641    Dxy     0.309    
+  1            742    Pr(> chi2) <0.0001    gr       1.899    gamma   0.309    
+ max |deriv| 2e-10                          gp       0.143    tau-a   0.144    
+                                            Brier    0.217                     
+ 
+            Coef    S.E.   Wald Z Pr(>|Z|)
+ Intercept  -0.2784 0.5414 -0.51  0.6071  
+ AGE        -0.0041 0.0060 -0.69  0.4917  
+ WEIGHTBL   -0.0011 0.0030 -0.36  0.7167  
+ EDSSBL      0.1067 0.0543  1.97  0.0494  
+ RLPS1YR     0.3533 0.1750  2.02  0.0434  
+ PRMSGR=1    0.0734 0.0990  0.74  0.4586  
+ REGION=2    0.0000 0.2530  0.00  1.0000  
+ REGION=3    0.0000 0.1290  0.00  1.0000  
+ REGION=4    0.0000 0.3328  0.00  1.0000  
+ REGION=5    0.2921 0.1225  2.39  0.0171  
+ GDVOLBL     0.0001 0.0001  1.26  0.2061  
+ SFPCSBL    -0.0136 0.0056 -2.41  0.0160  
+ DISTWKBL=1 -0.1139 0.2020 -0.56  0.5726  
+ 
+
+null device 
+          1 

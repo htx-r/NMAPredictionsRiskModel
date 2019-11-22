@@ -105,11 +105,11 @@ EffectModRiskFabio #distribution of Risk for those who relapsed and those who di
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp', 'p'),model.file = modelIPDNMR,
-                                        n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+                                        n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
-                                      n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+                                      n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 # Results using LASSO model
 print(IPDNMRJAGSmodelLASSO,varname=c("be","ORref","u","d"))
@@ -123,6 +123,7 @@ print(IPDNMRJAGSmodelFabio,varname=c("be","ORref","u","d"))
 
 traceplot(IPDNMRJAGSmodelLASSO$BUGSoutput,varname=c("be","ORref","u"))
 traceplot(IPDNMRJAGSmodelFabio$BUGSoutput,varname=c("be","ORref","u"))
+
 
 ####plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')

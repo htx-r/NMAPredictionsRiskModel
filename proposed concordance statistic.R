@@ -16,13 +16,13 @@ jagsdataIPDNMRLASSOconcordance <- list(
   nt=4,
   ref=4
 )
-n <- parallel::detectCores()/2 # experiment!
-cl <- parallel::makeCluster(n)
-doParallel::registerDoParallel(cl)
+#n <- parallel::detectCores()/2 # experiment!
+#cl <- parallel::makeCluster(n)
+#doParallel::registerDoParallel(cl)
 IPDNMRJAGSmodelLASSOconcordance <- jags.parallel(data = jagsdataIPDNMRLASSOconcordance,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
                                       n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-parallel::stopCluster(cl)
+#parallel::stopCluster(cl)
 
-  
+
 
