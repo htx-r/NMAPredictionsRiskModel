@@ -65,7 +65,7 @@ FabioModel<-RiskModels.fun(MSrelapse,"FabioModel")
 data1<-na.omit(MSrelapse)
 todrop<-c("STUDYID","USUBJID","TRT01A")
 data1<-data1[ , !(names(data1) %in% todrop)]
-Internal_validation<-BootstrapValidation.fun(data=data1, samples = 500, alphaElasticNet = 1, modelElasticNet = LASSOModel$lassomodel, modelSpecific = FabioModel$fabiomodel)
+Internal_validation<-BootstrapValidation.fun(data=data1, samples = 500, alpha = 1, modelElasticNet = LASSOModel$lassomodel, modelSpecific = FabioModel$fabiomodel)
 Discrimination_Calibration<-as.data.frame(Internal_validation[[7]])
 Discrimination_Calibration### bootstrap optimism corrected discriminatio and calibration of the models
 
