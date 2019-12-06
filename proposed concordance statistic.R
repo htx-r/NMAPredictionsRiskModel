@@ -20,9 +20,46 @@ jagsdataIPDNMRLASSOconcordance <- list(
 #cl <- parallel::makeCluster(n)
 #doParallel::registerDoParallel(cl)
 IPDNMRJAGSmodelLASSOconcordance <- jags.parallel(data = jagsdataIPDNMRLASSOconcordance,inits=NULL,parameters.to.save = c('logitp'),model.file = modelIPDNMR,
-                                      n.chains=2,n.iter = 100000,n.burnin = 1000,DIC=F,n.thin = 10)
+                                      n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 #parallel::stopCluster(cl)
 
+p<-IPDNMRJAGSmodelLASSOconcordance$BUGSoutput$mean$logitp
+expit<-function(x) {exp(x)/(1+exp(x))}
+p<-expit(IPDNMRJAGSmodelLASSOconcordance$BUGSoutput$mean$logitp)
+p<-as.data.frame(p)
+Relapse2year<-RiskData$RELAPSE2year
+Relapse2year<-as.data.frame(Relapse2year)
+Data<-cbind(p,Relapse2year)
+benefit<-as.data.frame(Data$V4-Data$V3)
+FinalData<-cbind(Data,benefit)
+Treatment<-RiskData$TRT01A
+FinalData<-cbind(FinalData,Treatment)
+FinalData<-FinalData[which(FinalData$Treatment==3  | FinalData$Treatment==4),]
+FinalDataNat<-FinalData[which(FinalData$Treatment==3),]
+FinalDataPla<-FinalData[which(FinalData$Treatment==4),]
+FinalDataPla<-sample_n(FinalDataPla,577)
 
+FinalDataPla<-FinalDataPla[order(FinalDataPla$`Data$V4 - Data$V3`),]
+
+FinalDataNat<-FinalDataNat[order(FinalDataNat$`Data$V4 - Data$V3`),]
+
+
+
+
+pred.ben.avg<-(FinalDataNat$`Data$V4 - Data$V3`+FinalDataPla$`Data$V4 - Data$V3`)/2
+obs.ben<-as.numeric(FinalDataNat$Relapse2year)-as.numeric(FinalDataPla$Relapse2year)
+# Matched patient pair data
+x<-data.frame(FinalDataNat$`Data$V4 - Data$V3`,FinalDataNat$Relapse2year,FinalDataPla$`Data$V4 - Data$V3`,FinalDataPla$Relapse2year,pred.ben.avg,obs.ben)
+
+cindex <- rcorr.cens(pred.ben.avg, obs.ben)
+c.benefit <- cindex["C Index"][[1]]
+c.benefit.se <- cindex["S.D."][[1]]/2	# The sd of the c-index is half the sd of Dxy
+
+c.benefit
+# [1] 0.6363636		# The c-for-benefit
+c.benefit - 1.96*c.benefit.se
+# [1] 0.3833374		# The 95% lower bound of the c-for-benefit
+c.benefit + 1.96*c.benefit.se
+# [1] 0.8893899
 

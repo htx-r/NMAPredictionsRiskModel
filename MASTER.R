@@ -105,16 +105,16 @@ EffectModRiskFabio #distribution of Risk for those who relapsed and those who di
 source('DataForIPDNMR.R')
 
 #run the model & results - it needs some time (around 5 minutes)
-IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('be', 'logitpplacebo','Beta', 'ORref','d','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                       n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 # Results using LASSO model
-print(IPDNMRJAGSmodelLASSO,varname=c("be","ORref","u","d"))
+print(IPDNMRJAGSmodelLASSO,varname=c("gamma.w","ORref","u","delta"))
 # Results using Pellegrini's model
-print(IPDNMRJAGSmodelFabio,varname=c("be","ORref","u","d"))
+print(IPDNMRJAGSmodelFabio,varname=c("gamma.w","ORref","u","delta"))
 
 #
 #credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
