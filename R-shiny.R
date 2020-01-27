@@ -13,14 +13,12 @@
 library(readxl)
 library(shiny)
 library(shinythemes)
-library(ggplot)
 library(gridExtra)
 library(ggpubr)
 library(ggplot2)
 
 GraphdataF<-read_excel("C:/Users/kc19o338/Desktop/Real world predictions project/Data for the Graph7.xls")
 colnames(GraphdataF)<-c("Treatment","Predicted probability to relapse in 2 years %", "Baseline risk score")
-
 
 server <- function(input, output, session) {
 
@@ -51,7 +49,7 @@ server <- function(input, output, session) {
   table2<- reactive(round(table()[,2],0))
   table3<-reactive(table()[,3])
 
-  output$table<-renderDataTable(cbind(table1(),table2()))
+  output$tablef<-renderDataTable(cbind(table1(),table2()))
 
     output$final.risk.score <- renderText({
      paste("Your baseline risk score is", as.integer(risk.score()))
@@ -85,7 +83,7 @@ ui <-  fluidPage(theme=shinytheme("readable"),
   numericInput(inputId="SFPCSBL", label="Baseline SF-36 PCS",value=1, min=0,max=80, step=0.01),
   numericInput(inputId="SFMCSBL", label="Baseline SF-36 MCS",value=1, min=0,max=80, step=0.001)),
 
-  mainPanel( textOutput("final.risk.score"),plotOutput("plot"), dataTableOutput("table")#, textOutput("best.treatment")
+  mainPanel( textOutput("final.risk.score"),plotOutput("plot"), dataTableOutput("tablef")#, textOutput("best.treatment")
 )
 )
 )

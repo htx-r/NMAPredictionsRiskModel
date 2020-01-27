@@ -83,21 +83,6 @@ source("RiskData.R")
 ## boxplot of both models
 source('Plots.R')
 
-### For LASSO model
-RiskDistLASSO #distribution of Risk in the whole dataset of LASSO model
-RandomizationRiskLASSO  #distribution of Risk in each of the studies - randomization of risk for LASSO model
-PrognosticRiskLASSO #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
-EffectModRiskLASSO #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
-
-## For Fabio's Model
-
-RiskDistFabio #distribution of Risk in the whole dataset of LASSO model
-RandomizationRiskFabio  #distribution of Risk in each of the studies - randomization of risk for LASSO model
-PrognosticRiskFabio #distribution of Risk for those who relapsed and those who did not relapse - Prognostic factor
-EffectModRiskFabio #distribution of Risk for those who relapsed and those who did not relapse in each arm and study - Effect modifier
-
-
-
 #######################################################################################
 ####################### STAGE 2 - NMA PREDICTION MODEL ###############################################
 ######################################################################################
@@ -127,24 +112,6 @@ traceplot(IPDNMRJAGSmodelFabio$BUGSoutput,varname=c("be","ORref","u"))
 
 ####plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
-
-####plots of predicted probability of relapse
-#LASSO model
-IPDplotLASSO
-#Pellegrini's model
-IPDplotFabio
-##### plots of ORs
-#LASSO model
-IPDplotLASSO_OR
-#Pellegrini's model
-IPDplotFabio_OR
-
-
-#### predicted probabilities of relapse under both models and under each treatment
-#LASSO
-LASSOtable
-# Fabio
-Fabiotable
 
 ##remove list
 rm(list=ls())

@@ -93,13 +93,13 @@ dataset$RELAPSE2year<-as.factor(dataset$RELAPSE2year)
 PrognosticLogitRiskLASSO<-ggdensity(dataset, x = "LogitRiskLASSO",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
-          palette = c("blue", "yellow"), xlab = "Logit Risk score as a prognostic factor")
+          palette = c("black", "grey"), xlab = "Logit Risk score as a prognostic factor")
 
 #Risk
 PrognosticRiskLASSO<-ggdensity(dataset, x = "RiskLASSO",
           add = "mean", rug = TRUE,
           color = "RELAPSE2year", fill = "RELAPSE2year",
-          palette = c("blue", "yellow"), xlim=c(0,0.75),xlab = "Risk score as a prognostic factor")
+          palette = c("black", "grey"), xlim=c(0,0.75),xlab = "Risk score as a prognostic factor")
 ##Risk as prognostic factor
 summary(dataset$RiskLASSO[dataset$RELAPSE2year==1])
 summary(dataset$RiskLASSO[dataset$RELAPSE2year==0])
@@ -290,13 +290,13 @@ dataset$RELAPSE2year<-as.factor(dataset$RELAPSE2year)
 PrognosticLogitRiskFabio<-ggdensity(dataset, x = "LogitRiskFabio",
                                     add = "mean", rug = TRUE,
                                     color = "RELAPSE2year", fill = "RELAPSE2year",
-                                    palette = c("blue", "yellow"), xlab = "Logit Risk score as a prognostic factor")
+                                    palette = c("black", "grey"), xlab = "Logit Risk score as a prognostic factor")
 
 #Risk
 PrognosticRiskFabio<-ggdensity(dataset, x = "RiskPellegrini",
                                add = "mean", rug = TRUE,
                                color = "RELAPSE2year", fill = "RELAPSE2year",
-                               palette = c("blue", "yellow"),xlim=c(0,0.75), xlab = "Risk score as a prognostic factor")
+                               palette = c("black", "grey"),xlim=c(0,0.75), xlab = "Risk score as a prognostic factor")
 ##Risk as prognostic factor
 summary(dataset$RiskPellegrini[dataset$RELAPSE2year==1])
 summary(dataset$RiskPellegrini[dataset$RELAPSE2year==0])
@@ -411,7 +411,7 @@ summary(L$RiskPellegrini[L$Treatment=="Placebo" & L$RELAPSE2year==1])
 
 EffectModRiskFabio<-ggarrange(d,e,f,labels = c("A","B","C"))
 
-boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,ylab=c("Baseline Risk score"), names = c("LASSO-Model","Pellegrini-Model"))
+#boxplot(RiskData$RiskLASSO,RiskData$RiskFabio,ylab=c("Baseline Risk score"), names = c("LASSO-Model","Pellegrini-Model"))
 #remove no needed items
 rm(a)
 rm(b)
