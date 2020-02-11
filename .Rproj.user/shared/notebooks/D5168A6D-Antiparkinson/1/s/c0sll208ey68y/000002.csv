@@ -1,0 +1,6 @@
+"0","a=decomp.design(net1)"
+"0","print(round(a$Q.inc.random$pval,3))"
+"1","[1]"
+"1"," 0.928"
+"1","
+"
