@@ -23,13 +23,13 @@ sample_size<-pmsampsize(type="b", rsquared=R2csadj, shrinkage=0.90, parameters =
 cat("The needed sample size for the LASSO model is")
 print(sample_size$results_table)
 
-##### for Fabio's model:
+##### for PreSpecified model:
 
 Fmodel<-lrm(RELAPSE2year~AGE+SEX+RACE+EDSSBL+ONSYRS+RLPS1YR+TRELMOS+PRMSGR+T25FWABL+NHPTMBL+PASATABL+VFT25BL+SFPCSBL+SFMCSBL,x=TRUE,y=TRUE,data=X)
 Fdf<-Fmodel[["stats"]][["d.f."]]
 Fevents<- nrow(X[which(X$RELAPSE2year==1),])
 FEPV<-Fevents/Fdf
-cat("The EPV of the Fabio's model is", FEPV, fill=TRUE)
+cat("The EPV of the PreSpecified model is", FEPV, fill=TRUE)
 
 #### sample size by Riley et al
 #null model
@@ -38,7 +38,7 @@ MaxRcs<-(1-exp(2*as.numeric(logLik(mod0)/2000)))
 ##R2csadj=0.15*0.73, 0.15 is recommended by RIley et al.
 R2csadj=0.15*MaxRcs
 Fsample_size<-pmsampsize(type="b", rsquared=R2csadj, shrinkage=0.90, parameters = Fdf, prevalence= 742/2000)
-cat("The needed sample size for the Fabio's model is")
+cat("The needed sample size for the PreSpecified model is")
 print(Fsample_size$results_table)
 
 

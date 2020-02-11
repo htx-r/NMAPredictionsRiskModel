@@ -49,7 +49,7 @@ jagsdataIPDNMRLASSO <- list(
   ref=4
 )
 
-jagsdataIPDNMRFabio <- list(
+jagsdataIPDNMRPreSpecified <- list(
   Nstudies=3,
   Np=nrow(RiskData),
   studyid=as.numeric(RiskData$STUDYID),
@@ -62,8 +62,8 @@ jagsdataIPDNMRFabio <- list(
   logitmeanRisknew=-0.545,
   Nnew=99,
   arm=RiskData$arm,
-  Risk=RiskData$logitRiskFabio,
-  meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
+  Risk=RiskData$logitRiskPreSpecified,
+  meanRisk=c(tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
   ##here is the mean of logit of risk
   nt=4,
   ref=4

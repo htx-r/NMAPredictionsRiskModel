@@ -7,8 +7,8 @@ X<-na.omit(dataset)
 X$logitRiskLASSO<-predict(LASSOModel$lassomodel,new=X)
 X$RiskLASSO<-exp(X$logitRiskLASSO)/(1+exp(X$logitRiskLASSO))
 ###logit risk and risk for each one of the patients based one the model
-X$logitRiskFabio<-predict(FabioModel$fabiomodel,new=X)
-X$RiskFabio<-exp(X$logitRiskFabio)/(1+exp(X$logitRiskFabio))
+X$logitRiskPreSpecified<-predict(PreSpecifiedModel$PreSpecifiedmodel,new=X)
+X$RiskPreSpecified<-exp(X$logitRiskPreSpecified)/(1+exp(X$logitRiskPreSpecified))
 
 ##make treatment and study id numeric for the prediction model
 X$TRT01A<-as.numeric(X$TRT01A)

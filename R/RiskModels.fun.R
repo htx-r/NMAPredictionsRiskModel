@@ -38,8 +38,7 @@ RiskModels.fun<-function(dataset,model){
     cv.pf.em.both
     ##plot lambda
     plot(cv.fit.both)
-    ##plot coeff
-    plot(coef(cv.fit.both))
+
 
   # Method of shrinkage. Model with LASSO selected variables and coefficients
     ###logistic model based on LASSO selected variables
@@ -64,27 +63,17 @@ RiskModels.fun<-function(dataset,model){
     lassomodel$coefficients[13]<-lassocoef[44]
 
 
-    ##validate the model (we do not need SE's for the validation)
-    set.seed(1)
-    val.lassomodel<-validate(lassomodel,method="boot",B=500) #### For validation we do not need SE's
-    ##also for the predictions we do not need SE's
-    c_index.lassomodel <- abs(val.lassomodel[1,5])/2 + 0.5
-    c_slope.lassomodel<-val.lassomodel[4,5]
-
 
     ###return
      cat("The selected variables and their coefficients by LASSO model are:" )
      print(lassomodel)
-     cat("The bootstap corrected discrimination of the LASSO model is", c_index.lassomodel, "and the bootstap corrected c-slope is", c_slope.lassomodel, fill=TRUE)
 
-    discrimination<-c(c_index.lassomodel)
-    calibration<-c(c_slope.lassomodel)
-    return(list(discrimination=discrimination, calibration=calibration, lassomodel=lassomodel))
+    return(list(lassomodel=lassomodel))
 
   }
 
 
-  if (model=="FabioModel") {
+  if (model=="PreSpecifiedModel") {
 
 
     #drop STUDYID, USIBJID (no needed for the matrix), drop TRT01A (blinded to treatment)
@@ -102,20 +91,12 @@ RiskModels.fun<-function(dataset,model){
     set.seed(1)
     penalized	<-  pentrace(finalmodel, seq(0,200,0.1))
     finalmodel.pen <- update (finalmodel, penalty=penalized$penalty)
-    #### bootstrap validation for the penalized model
-    set.seed(1)
-    val.pen<-validate(finalmodel.pen,method="boot",B=500)
-    c_index.pen <- abs(val.pen[1,5])/2 + 0.5
-    c_slope.pen<-val.pen[4,5]
 
 
-    cat("Pellegrini's et al. model is:")
+
+    cat("PreSpecified et al. model is:")
     print(finalmodel.pen)
-    cat("The bootstap corrected discrimination of the model after PMLE of coefficients is", c_index.pen, "and the bootstap corrected c-slope is", c_slope.pen, fill=TRUE)
-
-    discrimination<-c(c_index.pen)
-    calibration<-c(c_slope.pen)
-    return(list(discrimination=discrimination, calibration=calibration, fabiomodel=finalmodel.pen))
+    return(list(PreSpecifiedmodel=finalmodel.pen))
 
 
   }

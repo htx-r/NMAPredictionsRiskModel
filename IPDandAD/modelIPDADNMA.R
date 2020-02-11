@@ -1,3 +1,12 @@
+#########################################################################################
+################ Script for testing first the NMA with IPDs and AD ######################
+#########################################################################################
+
+
+
+## First you have to run all the Master file
+### Run lines 1 to 90 (instead of lines: 63-70: Bootstrap calibration and discrimination)
+### You don't need IPDNMR
 
 modelIPDADNMA<-function(){
 
@@ -124,7 +133,8 @@ jagsdataIPDADnetmeta <- list(
 IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADnetmeta ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file = modelIPDADNMA,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 
-str(jagsdataIPDADnetmeta)
+traceplot(IPDADnetmetaJAGSmodel)
+IPDADnetmetaJAGSmodel
 
 
 ##########################################################################################

@@ -1,3 +1,10 @@
+#################################################################################################################
+###    Script for testing the NMR with IPDs and AD,  by using Risk as Prognostic factor #########################
+######################   and only within study effect modification                  ##############################
+#################################################################################################################
+
+
+
 modelIPDADNMRgwithinonly<-function(){
 
   #############Part I: model for IPD data
@@ -138,3 +145,98 @@ jagsdataIPDADnetmeta <- list(
 ####RUN the model
 IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADnetmeta ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.w'),model.file = modelIPDADNMRgwithinonly,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
+
+traceplot(IPDADnetmetaJAGSmodel)
+IPDADnetmetaJAGSmodel
+
+
+
+##################################################################################################################
+############################# CHECK RESULTS WITH IPD DATA ONLY ###############################################
+####################################################################################################################
+
+
+modelIPDNMRWithinonly<-function(){
+  ###likelihood
+  for (i in 1:Np){
+    outcome[i]~dbern(p[i])
+    ###formula
+    logit(p[i])<-u[studyid[i]] + d[studyid[i], arm[i]] + g[studyid[i]]*(Risk[i]-meanRisk[studyid[i]]) + g.w[studyid[i],arm[i]]*(Risk[i]-meanRisk[studyid[i]])
+  }
+
+  ## g fixed across studies
+
+  for (i in 1:Nstudies){
+    g[i]<-gamma
+  }
+
+  #####treatment effect - fixed across studies and correction for multi-arm studies
+  for(i in 1:Nstudies){
+    d[i,1] <- 0
+    w[i,1] <- 0
+    g.w[i,1]<-0
+
+    for(k in 2:na[i]){
+      d[i,k]<-md[i, k]
+      md[i, k] <- mean[i, k] + sw[i, k]
+      w[i, k] <- (d[i, k] - mean[i, k])
+      sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)
+      mean[i, k] <- delta[treat[i, k]] - delta[treat[i, 1]]
+
+      g.w[i,k]<-gamma.w[treat[i,k]]-gamma.w[treat[i,1]]
+
+    }
+  }
+
+
+  ###priors
+
+  gamma~dnorm(0,0.001)
+
+  ##independent ui for each study
+  for (i in 1:Nstudies){
+    u[i]~dnorm(0,0.001)
+  }
+
+  delta[ref] <- 0 # treatment effect is zero for reference treatment = PLACEBO
+  gamma.w[ref] <- 0
+
+  for (k in 1:(ref-1)){
+    delta[k] ~ dnorm(0, 0.001)
+    gamma.w[k] ~ dnorm(0, 0.001)
+
+  }
+  for (k in (ref+1):nt){
+    delta[k] ~ dnorm(0, 0.001)
+    gamma.w[k] ~ dnorm(0, 0.001)
+
+
+  }
+
+}
+
+
+jagsdataIPDNMRFabio <- list(
+  Nstudies=3,
+  Np=nrow(RiskData),
+  studyid=as.numeric(RiskData$STUDYID),
+  outcome=as.numeric(RiskData$RELAPSE2year)-1,
+  outcomeP=PlaceboArms$Relapse2year,
+  NpPlacebo=nrow(PlaceboArms),
+  treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA)),
+  na=c(2,3,2),
+  logitRisknew=logitRisknew,
+  logitmeanRisknew=-0.545,
+  Nnew=99,
+  arm=RiskData$arm,
+  Risk=RiskData$logitRiskFabio,
+  meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
+  ##here is the mean of logit of risk
+  nt=4,
+  ref=4
+)
+
+IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('gamma.w','gamma', 'ORref','delta','u'),model.file = modelIPDNMRWithinonly,
+                                      n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
+
+IPDNMRJAGSmodelFabio

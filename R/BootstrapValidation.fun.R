@@ -135,7 +135,7 @@ BootstrapValidation.fun <- function(data, samples, alpha,modelElasticNet, modelS
   ###creation of a 2x1 table with both model's calibrations
   ElNetModel$calibration<-as.data.frame(Calibration_slope_correctedelnet, row.names=c("LASSO model"))
   colnames(ElNetModel$calibration)<-c("calibration")
-  ModelSpecific$calibration<-as.data.frame(Calibration_slope_correctedmodelSpecific, row.names=c("Fabio model with PMLE shrinkage method"))
+  ModelSpecific$calibration<-as.data.frame(Calibration_slope_correctedmodelSpecific, row.names=c("PreSpecified model with PMLE shrinkage method"))
   colnames(ModelSpecific$calibration)<-c("calibration")
 
   PerformanceTablecal<-rbind(ElNetModel$calibration,ModelSpecific$calibration)

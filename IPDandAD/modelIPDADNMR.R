@@ -1,3 +1,12 @@
+#################################################################################################################
+###    Script for testing the NMR with IPDs and AD,  by using Risk as Prognostic factor #########################
+######################   and both within and between effect modifier               ##############################
+#################################################################################################################
+
+
+
+
+
 modelIPDADNMR<-function(){
 
   #############Part I: model for IPD data
@@ -138,3 +147,5 @@ jagsdataIPDADnetmeta <- list(
 ####RUN the model
 IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADnetmeta ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.b','gamma.w'),model.file = modelIPDADNMR,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
+traceplot(IPDADnetmetaJAGSmodel)
+IPDADnetmetaJAGSmodel

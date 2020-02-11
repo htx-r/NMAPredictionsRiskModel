@@ -2,6 +2,8 @@
 #         Master analysis for MS NMA Prediction MODEL
 ############################################################
 
+
+
 ##########################################################
 ############### LIBRARIES #################################
 
@@ -28,6 +30,8 @@ library(selectiveInference)
 library(plyr)
 library(vcd)
 library(pROC)
+library(DiagrammeR)
+
 #######################################################################################
 ####################################  DATA   ###########################################
 
@@ -49,69 +53,99 @@ adsl<-adsl01[adsl01$STUDYID!="SENTINEL" & adsl01$STUDYID!="ADVANCE" ,]
 ## transformations of continuous variables to approximate normal distribution
 MSrelapse<-numericalDataRisk.fun(adsl)  ##final full dataset
 
+
 #######################################################################################
 ############################ STAGE 1 - RISK MODEL ###############################################
 ######################################################################################
+
+#Step 1. Obtain the EPV and the required sample size for the development of the models
 source('EPVandSampleSize.R')
-####################### CHECK DIFFERENT RISK MODELS + SHRINKAGE ###############
 
-######## Model 1 - results of LASSO model
+#Step 2. Build two different risk models with shrinkage
+
+######## Model 1 - results of LASSO model with LASSO shrinkage
 LASSOModel<-RiskModels.fun(MSrelapse,"LASSOModel")
-#########  Model 2 - Results of Pellegrini's model
-FabioModel<-RiskModels.fun(MSrelapse,"FabioModel")
+#########  Model 2 - Results of Pre-specified model using Penalized Maximum Likelihood Estimation for shrinkage
+PreSpecifiedModel<-RiskModels.fun(MSrelapse,"PreSpecifiedModel")
 
+#Step 3. Bootstrap calibration and discrimination by using the same bootstrap sample for two models each time
 ###needs more than 3 hours to run! You can skip it without any problem further
 ###Performance table of models : discrimination and calibration
 data1<-na.omit(MSrelapse)
 todrop<-c("STUDYID","USUBJID","TRT01A")
 data1<-data1[ , !(names(data1) %in% todrop)]
-Internal_validation<-BootstrapValidation.fun(data=data1, samples = 500, alpha = 1, modelElasticNet = LASSOModel$lassomodel, modelSpecific = FabioModel$fabiomodel)
+Internal_validation<-BootstrapValidation.fun(data=data1, samples = 500, alpha = 1, modelElasticNet = LASSOModel$lassomodel, modelSpecific = PreSpecifiedModel$PreSpecifiedmodel)
 Discrimination_Calibration<-as.data.frame(Internal_validation[[7]])
 Discrimination_Calibration### bootstrap optimism corrected discriminatio and calibration of the models
 
-### Calibration Plots
-#For LASSO model
-Calibrationplots.fun(model="LASSOModel")
-# For Pellegrini's model
-Calibrationplots.fun(model="FabioModel")
-
-### Create a dataset that includes Risk's and logit Risk's predictions for each individual and for both models
-##ALso make treatment and studies numerical
+#Step 4. Create a dataset that includes Risk's and logit Risk's predictions for each individual and for both models
+##Also make treatment and studies numerical values
 source("RiskData.R")
 
-###plots of risk score
-## boxplot of both models
+#Step 5. Source the script for the plots of risk score
 source('Plots.R')
 
 #######################################################################################
 ####################### STAGE 2 - NMA PREDICTION MODEL ###############################################
 ######################################################################################
-#add proper columns in the RiskData, like arm, meanRisk, etc.
+
+#Step 1.  Add proper columns in the RiskData, like arm, meanRisk, etc.
 source('DataForIPDNMR.R')
 
-#run the model & results - it needs some time (around 5 minutes)
+#Step 2. Run the model & results & check of traceplots
 IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                         n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSmodelPreSpecified <- jags.parallel(data = jagsdataIPDNMRPreSpecified,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                       n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 # Results using LASSO model
 print(IPDNMRJAGSmodelLASSO,varname=c("gamma.w","ORref","u","delta"))
 # Results using Pellegrini's model
-print(IPDNMRJAGSmodelFabio,varname=c("gamma.w","ORref","u","delta"))
-
-#
-#credible intervals: IPDNMRJAGSmodelFORlogitp$BUGSoutput$summary[,3]
+print(IPDNMRJAGSmodelPreSpecified,varname=c("gamma.w","ORref","u","delta"))
 
 # traceplots
 
 traceplot(IPDNMRJAGSmodelLASSO$BUGSoutput,varname=c("be","ORref","u"))
-traceplot(IPDNMRJAGSmodelFabio$BUGSoutput,varname=c("be","ORref","u"))
+traceplot(IPDNMRJAGSmodelPreSpecified$BUGSoutput,varname=c("be","ORref","u"))
 
 
-####plot of IPD NMR with both models
+#Step 3. Plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
 
-##remove list
+
+
+############################ All tables and figures of presented in the paper #########################
+source('Paper - Tables and Figures.R')
+#Table 1
+AFFIRM
+CONFIRM
+DEFINE
+Placebo
+#Table 2
+Table_LASSOModel
+Table_PreSpecifiedModel
+#Table 3
+IPDNMR_Table
+#Table 4
+##predicted probabilities to relapse in 2 years
+LASSOtable #for LASSO model
+PreSpecifiedtable #for pre-specified model
+###ORs of relapsing in 2 years
+LASSOtableOR #for LASSO model
+PreSpecifiedtableOR #for pre-specified model
+#Figure 1
+ggarrange(PrognosticRiskLASSO,PrognosticRiskPreSpecified,ncol = 1,nrow = 2,labels = c("A  LASSO model","B  Pre-specified model"), hjust=-0.2,font.label = list(size = 11))
+#Figure 2
+ggarrange(IPDplotLASSO,IPDplotPreSpecified,ncol = 1,nrow = 2,labels = c("A","B"),font.label = list(size = 11))
+#Appendix figure 1
+ggarrange(IPDplotLASSO_OR,IPDplotPreSpecified_OR,ncol = 1,nrow = 2,labels = c("A","B"),font.label = list(size = 11))
+#Appendix figure 3
+Flowchart
+
+############################# R-shiny app ##################################################################
+source('R-shiny.R')
+shinyApp(ui = ui, server = server) #also available in https://cinema.ispm.unibe.ch/shinies/koms/
+
+#########################   END    #################################################################
 rm(list=ls())
