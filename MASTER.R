@@ -36,22 +36,22 @@ library(DiagrammeR)
 ####################################  DATA   ###########################################
 
 ###### Give your path of data
-mydatapath="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data/IPD data from 6 Biogen trials"
-mydatapath1="C:/Users/kc19o338/Desktop/Real world predictions project/HTx/data cleaning"
+mydatapath="C:/Users/kc19o338/Desktop/RealWorldPredictionModel/HTx/data/IPD data from 6 Biogen trials"
+mydatapath1="C:/Users/kc19o338/Desktop/RealWorldPredictionModel/HTx/Placebo Arms"
 ######## load data
 ###cleaning the data from BIOGEN, defined the outcomes in columns: RELAPSE02Year, RELAPSE01Year, names of Treatments and Drugs
 cleanBIOGENtrials<-cleanBIOGENtrials.fun(mydatapath)
 PlaceboArms<-cleanPLACEBOtrials.fun(mydatapath1)
-adsl01<-cleanBIOGENtrials$adsl01
+RCTs0<-cleanBIOGENtrials$adsl01
 ###drop SENTTINEL STUDY because of combination of treatments and
 ### drop ADVANCE study because does not provide information for Relapse in 2 years (only for 1 year)
-adsl<-adsl01[adsl01$STUDYID!="SENTINEL" & adsl01$STUDYID!="ADVANCE" ,]
+RCTs<-RCTs0[RCTs0$STUDYID!="SENTINEL" & RCTs0$STUDYID!="ADVANCE" ,]
 ### Select variables that I need- exclude variables with a huge ammount of missing values (more than 50%),
 #exclude factors with just one category, exclude factors that are transformations from already existing variables)
 #exclude highly correlated variables
 ###and recode them in numerical values (e.g. Male=1, Female=0)
 ## transformations of continuous variables to approximate normal distribution
-MSrelapse<-numericalDataRisk.fun(adsl)  ##final full dataset
+MSrelapse<-numericalDataRisk.fun(RCTs)  ##final full dataset
 
 
 #######################################################################################
