@@ -1,3 +1,8 @@
+###################################################################################################################################
+##############################   Model for IPD and AD NMR  #######################################
+##############################################################################################################################
+
+
 modelIPDADNMR<-function(){
 
   #############Part I: model for IPD data
@@ -64,7 +69,7 @@ modelIPDADNMR<-function(){
   }
 
   ####PART III: Model for combining all treatment effect estimates
- #Vague priors
+  #Vague priors
 
   ##independent ui for each study
   for (i in 1:(N.IPD.studies+N.AD.studies)){
@@ -92,49 +97,3 @@ modelIPDADNMR<-function(){
 
 }
 
-
-
-#### Aggregated data
-MS <- read_excel("C:/Users/kc19o338/articles/TracemereADMS/MS replication/MS.xlsx")
-MS <- as.data.frame(MS)
-
-ADdata<-MS[which(MS$study=="Bornstein" | MS$study=="Johnson"),]
-
-
-######DATA
-## arm column
-RiskData$arm<-NA
-RiskData$arm[RiskData$STUDYID==1 & RiskData$TRT01A==1]<-1
-RiskData$arm[RiskData$STUDYID==1 & RiskData$TRT01A==4]<-2
-RiskData$arm[RiskData$STUDYID==2 & RiskData$TRT01A==1]<-1
-RiskData$arm[RiskData$STUDYID==2 & RiskData$TRT01A==2]<-2
-RiskData$arm[RiskData$STUDYID==2 & RiskData$TRT01A==4]<-3
-RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==3]<-1
-RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==4]<-2
-
-ADdata$treat[which(ADdata$treat=="Placebo")]<-1
-ADdata$treat[which(ADdata$treat=="Glatiramer acetate")]<-2
-ADdata$id<-c(4,4,5,5)
-
-jagsdataIPDADnetmeta <- list(
-  N.IPD.studies=3,
-  Np=sum(as.numeric(table(as.numeric(as.factor(RiskData$STUDYID))))),
-  studyid=as.numeric(as.factor(RiskData$STUDYID)),
-  outcome=as.numeric(RiskData$RELAPSE2year)-1,
-  treat= rbind(c(1,4,NA),c(1,2,4),c(3,4,NA), c(2,4,NA),c(2,4,NA)),
-  na=c(2,3,2,2,2),
-  arm=RiskData$arm,
-  ref=4,
-  nt=4,
-  N.AD.studies=2,
-  outcome.ad=rbind(c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,11,NA,19),c(NA,89,NA,97)),
-  n=rbind(c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,25,NA,25),c(NA,125,NA,126)),
-  Risk=RiskData$logitRiskFabio,
-  meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4], -0.5, -0.6)##here is the mean of logit of risk
-
-
-)
-
-####RUN the model
-IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADnetmeta ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.b','gamma.w'),model.file = modelIPDADNMR,
-                                       n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)

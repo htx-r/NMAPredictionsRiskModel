@@ -1,15 +1,15 @@
-#####################################################################################################################################
-##################################  MODEL FOR IPD AND AD NMA  #####################################################################
-#################################################################################################################################
+##############################################################################################################################
+##############  Model for IPD and AD NMR, with Risk only as prognostic factor ###############################################
+##############################################################################################################################
 
 
-modelIPDADNMA<-function(){
+modelIPDADNMRPr<-function(){
 
   #############Part I: model for IPD data
   for (i in 1:Np){
     outcome[i]~dbern(p[i])
     ###formula
-    logit(p[i])<-u[studyid[i]] + d[studyid[i], arm[i]]
+    logit(p[i])<-u[studyid[i]] + d[studyid[i], arm[i]] + g[studyid[i]]*(Risk[i]-meanRisk[studyid[i]])
   }
 
   #####treatment effects - fixed across studies & correction for multi-arm studies
@@ -27,6 +27,13 @@ modelIPDADNMA<-function(){
     }
 
   }
+
+  ##fixed across studies for g
+  for (i in 1:N.IPD.studies){
+    g[i]<-gamma
+  }
+  #vague prior for gamma
+  gamma~dnorm(0,0.001)
 
   ##Part II: Model for AD data
 

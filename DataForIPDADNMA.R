@@ -22,7 +22,7 @@ RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==3]<-1
 RiskData$arm[RiskData$STUDYID==3 & RiskData$TRT01A==4]<-2
 
 
-jagsdataIPDADnetmeta <- list(
+jagsdataIPDADNMA<- list(
   N.IPD.studies=3,
   Np=sum(as.numeric(table(as.numeric(as.factor(RiskData$STUDYID))))),
   studyid=as.numeric(as.factor(RiskData$STUDYID)),

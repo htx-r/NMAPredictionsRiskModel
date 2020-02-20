@@ -30,6 +30,9 @@ library(selectiveInference)
 library(plyr)
 library(vcd)
 library(pROC)
+library(metafor)
+library(meta)
+library(netmeta)
 library(DiagrammeR)
 
 #######################################################################################
@@ -88,7 +91,7 @@ source("RiskData.R")
 source('Plots.R')
 
 #######################################################################################
-####################### STAGE 2 - NMA PREDICTION MODEL ###############################################
+####################### STAGE 2 - NMR PREDICTION MODEL ###############################################
 ######################################################################################
 
 #Step 1.  Add proper columns in the RiskData, like arm, meanRisk, etc.
@@ -115,24 +118,68 @@ traceplot(IPDNMRJAGSmodelPreSpecified$BUGSoutput,varname=c("ORref","u", "gamma.w
 #Step 3. Plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
 
+###################################################################################################################################
+####################### STAGE 2 - NMR PREDICTION MODEL COMBINING BOTH AD AND IPD ###############################################
+##################################################################################################################################
 
-#############################################################################################################################
-############################  NMA with IPD and AD ###########################################################################
-##########################################################################################################################
+
+
+################################################## A. NMA model  #################################################################
 
 ## We check the NMA model for IPD and AD
 
 # Here we load th AD, make proper arms in IPD data and make the jagsdata
-source('DataForIPDADNMA')
+source('DataForIPDADNMA.R')
 
 ####RUN the model
-IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADnetmeta ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file = modelIPDADNMA,
+IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file = modelIPDADNMA,
+                                       n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
+#traceplots
+traceplot(IPDADnetmetaJAGSmodel)
+#results
+IPDADnetmetaJAGSmodel
+
+#check the results with netmeta
+source('CheckNMA.R')
+
+################################################## B. NMR model with only prognostic factor #################################################################
+# Here we make the jagsdata
+source('DataForIPDADNMRPr.R')
+
+####RUN the model
+IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMRPr ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma'),model.file = modelIPDADNMRPr,
+                                       n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
+#traceplots
+traceplot(IPDADnetmetaJAGSmodel)
+#results
+IPDADnetmetaJAGSmodel
+#check the results with IPD NMR model
+source('CheckNMRPr.R')
+
+################################### C. NMR model with Risk as prognostic factor and only within effect modifier #################################################################
+# Here we make the jagsdata
+source('DataForIPDADNMREMwithin.R')
+####RUN the model
+IPDADnetmetaJAGSmodel <- jags.parallel(data =jagsdataIPDADNMREMwithin ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.w'),model.file = modelIPDADNMRgwithinonly,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplot
 traceplot(IPDADnetmetaJAGSmodel)
 #results
 IPDADnetmetaJAGSmodel
 
+#check the results with the corresponding IPD NMR model
+source('CheckNMREMwithin.R')
+
+################################### D. NMR model AD and IPD #################################################################
+# Here we make the jagsdata
+source('DataForIPDADNMR.R')
+####RUN the model
+IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMR ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.b','gamma.w'),model.file = modelIPDADNMR,
+                                       n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
+#traceplots
+traceplot(IPDADnetmetaJAGSmodel)
+#results
+IPDADnetmetaJAGSmodel
 
 
 ############################ All tables and figures of presented in the paper #########################
