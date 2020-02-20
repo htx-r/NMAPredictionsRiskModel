@@ -132,7 +132,7 @@ source('GraphForPredictedRisk.R')
 source('DataForIPDADNMA.R')
 
 ####RUN the model
-IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file = modelIPDADNMA,
+IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file =modelIPDADNMA,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplots
 traceplot(IPDADnetmetaJAGSmodel)
@@ -141,6 +141,8 @@ IPDADnetmetaJAGSmodel
 
 #check the results with netmeta
 source('CheckNMA.R')
+summary(net1, digits = 2)
+forest(net1,ref=4,fontsize=10)
 
 ################################################## B. NMR model with only prognostic factor #################################################################
 # Here we make the jagsdata
@@ -180,6 +182,11 @@ IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMR ,inits=NULL,param
 traceplot(IPDADnetmetaJAGSmodel)
 #results
 IPDADnetmetaJAGSmodel
+
+###################################################################################################################################
+#######################                     FIGURES AND TABLES                  ###############################################
+##################################################################################################################################
+
 
 
 ############################ All tables and figures of presented in the paper #########################

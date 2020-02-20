@@ -4,7 +4,7 @@
 ####################################################################################################################
 
 
-jagsdataIPDNMRFabio <- list(
+jagsdataIPDNMRPreSpecified <- list(
   Nstudies=3,
   Np=nrow(RiskData),
   studyid=as.numeric(RiskData$STUDYID),
@@ -18,13 +18,13 @@ jagsdataIPDNMRFabio <- list(
   Nnew=99,
   arm=RiskData$arm,
   Risk=RiskData$logitRiskFabio,
-  meanRisk=c(tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskFabio, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
+  meanRisk=c(tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`1`[4],tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`2`[4],tapply(RiskData$logitRiskPreSpecified, RiskData$STUDYID, summary)$`3`[4]), ##here is the mean of logit of risk
   ##here is the mean of logit of risk
   nt=4,
   ref=4
 )
 
-IPDNMRJAGSmodelFabio <- jags.parallel(data = jagsdataIPDNMRFabio,inits=NULL,parameters.to.save = c('gamma', 'ORref','delta','u'),model.file = modelIPDNMRPr,
+IPDNMRJAGSmodelPreSpecified <- jags.parallel(data = jagsdataIPDNMRPreSpecified,inits=NULL,parameters.to.save = c('gamma', 'ORref','delta','u'),model.file = modelIPDNMRPr,
                                       n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-IPDNMRJAGSmodelFabio
+IPDNMRJAGSmodelPreSpecified

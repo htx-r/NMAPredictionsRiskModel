@@ -1,2 +1,0 @@
-"0","DATA1=read_excel(""C:/Users/kc19o338/Desktop/Schizophrenia project/Documentation of Schizophrenia relapses/Analysis schizofrenia/Datasets/dataset_relapsefinal.xlsx"", na=""99999"")"
-"0","DATA1<-DATA1[,-1]"
