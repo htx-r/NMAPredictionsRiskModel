@@ -121,6 +121,8 @@ source('GraphForPredictedRisk.R')
 ##########################################################################################################################
 
 ## We check the NMA model for IPD and AD
+
+# Here we load th AD, make proper arms in IPD data and make the jagsdata
 source('DataForIPDADNMA')
 
 ####RUN the model
