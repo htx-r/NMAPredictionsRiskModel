@@ -119,6 +119,7 @@ traceplot(IPDNMRJAGSmodelPreSpecified$BUGSoutput,varname=c("ORref","u", "gamma.w
 #Step 3. Plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
 
+
 ###################################################################################################################################
 ####################### STAGE 2 - NMR PREDICTION MODEL COMBINING BOTH AD AND IPD ###############################################
 ##################################################################################################################################
@@ -129,7 +130,7 @@ source('GraphForPredictedRisk.R')
 
 ## We check the NMA model for IPD and AD
 
-# Here we load th AD, make proper arms in IPD data and make the jagsdata
+# Here we load the AD, make proper arms in IPD data and make the jagsdata
 source('DataForIPDADNMR.R')
 
 source("R/modelIPDADNMA.R")#source the model will be used for rjags
@@ -200,7 +201,7 @@ traceplot(IPDADNMRJAGSmodel)
 IPDADNMRJAGSmodel
 
 ###################################################################################################################################
-#######################                     FIGURES AND TABLES                  ###############################################
+#######################                     FIGURES AND TABLES from paper ###############################################
 ##################################################################################################################################
 
 
