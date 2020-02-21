@@ -1,19 +1,19 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1582278449909.000,
+    "created" : 1582286177981.000,
     "dirty" : true,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3864353693",
-    "id" : "F8BBE5A4",
+    "hash" : "1539571407",
+    "id" : "8F8B05BA",
     "lastKnownWriteTime" : 1582286069,
-    "last_content_update" : 1582279087041,
+    "last_content_update" : 1582286284661,
     "path" : "C:/Users/kc19o338/Desktop/Real world predictions project/NMAPedictionsRiskModel/MASTER.R",
     "project_path" : "MASTER.R",
     "properties" : {
-        "cursorPosition" : "230,13",
-        "scrollLine" : "203"
+        "cursorPosition" : "243,0",
+        "scrollLine" : "216"
     },
     "relative_order" : 1,
     "source_on_save" : false,
