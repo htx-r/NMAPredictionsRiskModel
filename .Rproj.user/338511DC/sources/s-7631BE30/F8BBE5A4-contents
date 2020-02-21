@@ -130,31 +130,19 @@ source('GraphForPredictedRisk.R')
 
 # Here we load th AD, make proper arms in IPD data and make the jagsdata
 source('DataForIPDADNMA.R')
-
+source('modelIPDADNMA.R')
 ####RUN the model
-IPDADNMAJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file =modelIPDADNMA,
+IPDADnetmetaJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file =modelIPDADNMA,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplots
-traceplot(IPDADNMAJAGSmodel)
+traceplot(IPDADnetmetaJAGSmodel)
 #results
-IPDADNMAJAGSmodel
+IPDADnetmetaJAGSmodel
 
 #check the results with netmeta
 source('CheckNMA.R')
 summary(net1, digits = 2)
 forest(net1,ref=4,fontsize=10)
-
-####################################### Meta-regression to see what is the problem with the uis ###############################
-source('DataForIPDADMA.R')
-
-IPDADMAJAGSmodel <- jags.parallel(data = jagsdataIPDADMA ,inits=NULL,parameters.to.save = c('u','ORref',"mean"),model.file =modelIPDADMA,
-                                  n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
-#results
-IPDADMAJAGSmodel
-
-### We can see thath u[1:3] are much lower than u[4:5]. In NMA is like all of them drop down so that u[1:3] become less than 0
-# and u[4:5] become less than before but still higher than zero
-
 
 ################################################## B. NMR model with only prognostic factor #################################################################
 # Here we make the jagsdata
