@@ -10,8 +10,6 @@
 ###load the needed libraries
 library(devtools)
 install_github("htx-r/CleaningData",force=TRUE)
-install_github("htx-r/NMAPredictionsRiskModel", force = TRUE)
-library(NMAPredictionsRiskModel)
 library(CleaningData)
 library(R2jags)
 library(dplyr)
@@ -54,6 +52,7 @@ RCTs<-RCTs0[RCTs0$STUDYID!="SENTINEL" & RCTs0$STUDYID!="ADVANCE" ,]
 #exclude highly correlated variables
 ###and recode them in numerical values (e.g. Male=1, Female=0)
 ## transformations of continuous variables to approximate normal distribution
+source("R/numericalDataRisk.fun.R")
 MSrelapse<-numericalDataRisk.fun(RCTs)  ##final full dataset
 
 
@@ -69,6 +68,8 @@ source('EPVandSampleSize.R')
 #Step 2. Build two different risk models with shrinkage
 
 ######## Model 1 - results of LASSO model with LASSO shrinkage
+
+source("R/RiskModels.fun.R")
 LASSOModel<-RiskModels.fun(MSrelapse,"LASSOModel")
 #########  Model 2 - Results of Pre-specified model using Penalized Maximum Likelihood Estimation for shrinkage
 PreSpecifiedModel<-RiskModels.fun(MSrelapse,"PreSpecifiedModel")
@@ -99,22 +100,22 @@ source('DataForIPDNMR.R')
 
 source("R/modelIPDNMR.R") #source the model will be used for rjags
 #Step 2. Run the model & results & check of traceplots
-IPDNMRJAGSmodelLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSresultsLASSO <- jags.parallel(data = jagsdataIPDNMRLASSO,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                       n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
-IPDNMRJAGSmodelPreSpecified <- jags.parallel(data = jagsdataIPDNMRPreSpecified,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
+IPDNMRJAGSresultsPreSpecified <- jags.parallel(data = jagsdataIPDNMRPreSpecified,inits=NULL,parameters.to.save = c('gamma.w', 'logitpplacebo','gamma', 'ORref','delta','u','logitp'),model.file = modelIPDNMR,
                                              n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
 
 # Results using LASSO model
-print(IPDNMRJAGSmodelLASSO,varname=c("gamma.w","ORref","u","delta"))
+print(IPDNMRJAGSresultsLASSO,varname=c("gamma.w","ORref","u","delta"))
 # Results using Pellegrini's model
-print(IPDNMRJAGSmodelPreSpecified,varname=c("gamma.w","ORref","u","delta"))
+print(IPDNMRJAGSresultsPreSpecified,varname=c("gamma.w","ORref","u","delta"))
 
 # traceplots
 
-traceplot(IPDNMRJAGSmodelLASSO$BUGSoutput,varname=c("ORref","u", "gamma.w", "gamma"))
+traceplot(IPDNMRJAGSresultsLASSO$BUGSoutput,varname=c("ORref","u", "gamma.w", "gamma"))
 
-traceplot(IPDNMRJAGSmodelPreSpecified$BUGSoutput,varname=c("ORref","u", "gamma.w", "gamma"))
+traceplot(IPDNMRJAGSresultsPreSpecified$BUGSoutput,varname=c("ORref","u", "gamma.w", "gamma"))
 
 #Step 3. Plot of IPD NMR with both models
 source('GraphForPredictedRisk.R')
@@ -135,12 +136,12 @@ source('DataForIPDADNMR.R')
 
 source("R/modelIPDADNMA.R")#source the model will be used for rjags
 ####RUN the model
-IPDADNMAJAGSmodel <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file =modelIPDADNMA,
+IPDADNMAJAGSresults <- jags.parallel(data = jagsdataIPDADNMA ,inits=NULL,parameters.to.save = c('delta','u','ORref'),model.file =modelIPDADNMA,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplots
-traceplot(IPDADNMAJAGSmodel)
+traceplot(IPDADNMAJAGSresults)
 #results
-IPDADNMAJAGSmodel
+IPDADNMAJAGSresults
 
 #check the results with netmeta
 source('CheckNMA.R')
@@ -150,10 +151,10 @@ forest(net1,ref=4,fontsize=10)
 ####################################### Meta-regression to see what is the problem with the uis ###############################
 
 source("R/modelIPDADMA.R") #source the model will be used for rjags
-IPDADMAJAGSmodel <- jags.parallel(data = jagsdataIPDADMA ,inits=NULL,parameters.to.save = c("delta",'u'),model.file =modelIPDADMA,
+IPDADMAJAGSresults <- jags.parallel(data = jagsdataIPDADMA ,inits=NULL,parameters.to.save = c("delta",'u'),model.file =modelIPDADMA,
                                   n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #results
-IPDADMAJAGSmodel
+IPDADMAJAGSresults
 
 ### We can see that u[1:3] are much lower than u[4:5]. In NMA is like all of them drop down so that u[1:3] become less than 0
 # and u[4:5] become less than before but still higher than zero
@@ -164,41 +165,41 @@ IPDADMAJAGSmodel
 
 source("R/modelIPDADNMRPr.R") #source the model will be used for rjags
 ####RUN the model
-IPDADNMRPrJAGSmodel <- jags.parallel(data = jagsdataIPDADNMRPr ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma'),model.file = modelIPDADNMRPr,
+IPDADNMRPrJAGSresults<- jags.parallel(data = jagsdataIPDADNMRPr ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma'),model.file = modelIPDADNMRPr,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplots
-traceplot(IPDADNMRPrJAGSmodel)
+traceplot(IPDADNMRPrJAGSresults)
 #results
-IPDADNMRPrJAGSmodel
+IPDADNMRPrJAGSresults
 #check the results with IPD NMR model
 source('CheckNMRPr.R')
-IPDNMRJAGSmodelPreSpecified
+IPDNMRJAGSresultsPreSpecified
 
 ################################### C. NMR model with Risk as prognostic factor and only within effect modifier #################################################################
 
 
 source("R/modelIPDADNMREMwithin.R") #source the model will be used for rjags
 ####RUN the model
-IPDADNMREMwithinJAGSmodel <- jags.parallel(data =jagsdataIPDADNMREMwithin ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.w'),model.file = modelIPDADNMREMwithin,
+IPDADNMREMwithinJAGSresults <- jags.parallel(data =jagsdataIPDADNMREMwithin ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.w'),model.file = modelIPDADNMREMwithin,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplot
-traceplot(IPDADNMREMwithinJAGSmodel)
+traceplot(IPDADNMREMwithinJAGSresults)
 #results
-IPDADNMREMwithinJAGSmodel
+IPDADNMREMwithinJAGSresults
 
 #check the results with the corresponding IPD NMR model
 source('CheckNMREMwithin.R')
-IPDNMRJAGSmodelPrespecified
+IPDNMRJAGSresultsPrespecified
 ################################### D. NMR model AD and IPD #################################################################
 
 source("R/modelIPDADNMR.R") #source the model will be used for rjags
 ####RUN the model
-IPDADNMRJAGSmodel <- jags.parallel(data = jagsdataIPDADNMR ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.b','gamma.w'),model.file = modelIPDADNMR,
+IPDADNMRJAGSresults <- jags.parallel(data = jagsdataIPDADNMR ,inits=NULL,parameters.to.save = c('delta','u','ORref','gamma','gamma.b','gamma.w'),model.file = modelIPDADNMR,
                                        n.chains=2,n.iter = 10000,n.burnin = 100,DIC=F,n.thin = 1)
 #traceplots
-traceplot(IPDADNMRJAGSmodel)
+traceplot(IPDADNMRJAGSresults)
 #results
-IPDADNMRJAGSmodel
+IPDADNMRJAGSresults
 
 ###################################################################################################################################
 #######################                     FIGURES AND TABLES from paper ###############################################
@@ -241,7 +242,7 @@ Flowchart
 
 
 ############################# R-shiny app ##################################################################
-source('R-shiny.R')
+source('R-shiny.R') #here you have to change the path of the data
 shinyApp(ui = ui, server = server) #also available in https://cinema.ispm.unibe.ch/shinies/koms/
 
 #########################   END    #################################################################
