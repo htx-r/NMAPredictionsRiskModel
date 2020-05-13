@@ -37,12 +37,12 @@ FinalDataSMSC.fun=function(datapath){
     SMSCdata$outcome<-NA
     SMSCdata$outcome[which(SMSCdata$relapse.2y.after.study=="Yes")]<-1
     SMSCdata$outcome[which(SMSCdata$relapse.2y.after.study=="No")]<-0
-    SMSCdataC$outcome<-as.factor(SMSCdataC$outcome)
+    SMSCdata$outcome<-as.factor(SMSCdata$outcome)
     #create a variable that indicates the cycle of the patient (i.e. 1st cycle, 2nd cycle, 3rd cycle, etc.)
     SMSCdata$cycle <- ave(SMSCdata$unique.visit.id, SMSCdata$patient.id,  FUN = seq_along)
     #create a column with patient ids as numeric
-    #SMSCdata$NumericID <- as.numeric(factor(SMSCdata$patient.id,
-     #                                        levels=unique(SMSCdata$patient.id)))
+    SMSCdata$NumericID <- as.numeric(factor(SMSCdata$patient.id,
+                                             levels=unique(SMSCdata$patient.id)))
 
 
     return(SMSCdata)

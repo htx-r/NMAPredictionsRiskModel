@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589376111403.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D20D4831",
+    "lastKnownWriteTime" : 28147961535004783,
+    "last_content_update" : 1589376111403,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "901AB69E",
+        "caption" : "PlaceboArms",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=PlaceboArms&cache_key=901AB69E",
+        "displayedObservations" : "2465",
+        "environment" : "",
+        "object" : "PlaceboArms",
+        "preview" : "0",
+        "totalObservations" : "2465",
+        "variables" : "9"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

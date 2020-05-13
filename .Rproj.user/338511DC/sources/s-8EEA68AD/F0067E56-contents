@@ -1,0 +1,24 @@
+jagsdataSMSC3 <- list(
+  outcome=PlaceboArms2$Relapse2year,
+  N=nrow(PlaceboArms2)
+  )
+
+
+jagsmodelSMSC3 <-function(){
+  for (j in 1:N){
+  outcome[j]~dbern(p[j])
+  ###formula
+  logit(p[j])<-logitpplacebo
+}
+#prior for logitpplacebo
+logitpplacebo~dnorm(0,0.01)
+}
+
+# run the jugs model
+
+
+IPDNMRJAGSresultsLASSO <- jags.parallel(data = jagsdataSMSC3,inits=NULL,parameters.to.save = c('logitpplacebo'),model.file = jagsmodelSMSC3,
+                                        n.chains=2,n.iter = 10000,n.burnin = 1000,DIC=F,n.thin = 10)
+
+
+

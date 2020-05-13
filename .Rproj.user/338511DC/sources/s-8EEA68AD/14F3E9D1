@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589383305493.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "14F3E9D1",
+    "lastKnownWriteTime" : 1588776441,
+    "last_content_update" : 1588776441,
+    "path" : "C:/Users/kc19o338/Desktop/Real world predictions project/NMAPedictionsRiskModel/SMSCjagsResults.R",
+    "project_path" : "SMSCjagsResults.R",
+    "properties" : {
+        "cursorPosition" : "19,0",
+        "scrollLine" : "3",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
