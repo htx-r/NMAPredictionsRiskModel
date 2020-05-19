@@ -5,7 +5,7 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "514418830",
+    "hash" : "0",
     "id" : "678055CC",
     "lastKnownWriteTime" : 1575642208,
     "last_content_update" : 1575642208,
@@ -13,7 +13,7 @@
     "project_path" : "R/modelIPDNMR.R",
     "properties" : {
         "cursorPosition" : "66,30",
-        "scrollLine" : "57"
+        "scrollLine" : "0"
     },
     "relative_order" : 10,
     "source_on_save" : false,
