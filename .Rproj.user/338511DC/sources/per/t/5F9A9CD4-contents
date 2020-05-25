@@ -1,7 +1,7 @@
 jagsdataSMSC <- list(
   Nobservations=nrow(SMSCdataC),
   outcome=SMSCdataC$outcome,
-  npf=10,
+  npf=9,
   npid=length(unique(SMSCdataC$patient.id)),
   #subj=sort(as.integer((SMSCdataC$NumericID))),
   subj=as.integer(factor(SMSCdataC$patient.id)),
@@ -13,7 +13,6 @@ jagsdataSMSC <- list(
   months.since.last.relapse=SMSCdataC$months.since.last.relapse,
   treatment.naive.prior.visit=SMSCdataC$treatment.naive.prior.visit ,
   gender=as.factor(SMSCdataC$gender),
-  treatment.during.cycle =as.factor(SMSCdataC$treatment.during.cycle),
   treatment.time.during.cycle.months=SMSCdataC$treatment.time.during.cycle.months
 
 )
