@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591616340941.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "337435946",
+    "id" : "174B6038",
+    "lastKnownWriteTime" : 1591617372,
+    "last_content_update" : 1591617372937,
+    "path" : "C:/Users/kc19o338/Desktop/Real world predictions project/NMAPedictionsRiskModel/Frequentist_glmm.R",
+    "project_path" : "Frequentist_glmm.R",
+    "properties" : {
+        "cursorPosition" : "38,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
