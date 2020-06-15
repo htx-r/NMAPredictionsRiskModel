@@ -1,0 +1,3 @@
+"0","DATA<-DATA1[!is.na(DATA1$N_relapsed),]"
+"0","DATA<-DATA[which(DATA$Final_ID_all!=852),]"
+"0","DATA<-DATA[which(DATA$Final_ID_all!=4330),]"

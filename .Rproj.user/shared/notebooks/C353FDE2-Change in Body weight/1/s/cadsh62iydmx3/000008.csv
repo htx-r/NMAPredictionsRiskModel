@@ -1,0 +1,4 @@
+"0","MDpreds=out.jagsNMA.results3(NMAinJAGSBinP,treatnames = sort(unique(DATAw$Drug_name)),parameter=""predMD"",rounding=2,forestplot=F)
+"
+"2","Error in unique(DATA$Drug_name) : object 'DATA' not found
+"

@@ -1,0 +1,7 @@
+"0","DATA<-DATA1[!is.na(DATA1$Prolactin_participants),]"
+"0","DATA<-DATA[!is.na(DATA$Prolactin_mean),]"
+"0","DATA<-DATA[!is.na(DATA$Prolactin_sd),]"
+"0","excludeID <-c(4468)"
+"0","DATA=DATA[!DATA$Final_ID_all%in%excludeID,]"
+"0","cat(""Study 4468 was excluded because of disconnected network"")"
+"1","Study 4468 was excluded because of disconnected network"

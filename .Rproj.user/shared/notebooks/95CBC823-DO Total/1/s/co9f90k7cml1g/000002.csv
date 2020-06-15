@@ -1,0 +1,7 @@
+"0","#for the prediction intervals"
+"0","ORpreds=out.jagsNMA.results3(NMAinJAGSBinPORpred,treatnames = sort(unique(DATA$Drug_name)),parameter=""ORpred"",rounding=2,forestplot=F)"
+"0","ORpred<-as.data.frame(ORpreds$ORpred)"
+"0","ORpred[upper.tri(ORpred)]<-NA"
+"0","library(""xlsx"")"
+"0","write.xlsx(ORpred, ""C:/Users/kc19o338/Desktop/Johannes/SecondaryOutcomes/DO_Total/ORpred_DO_Total.xlsx"", sheetName = ""ORpred_DO_Total"")"
+"0","#"

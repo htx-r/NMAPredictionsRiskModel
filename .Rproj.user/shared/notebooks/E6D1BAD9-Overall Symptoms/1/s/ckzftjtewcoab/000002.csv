@@ -1,0 +1,3 @@
+"0","DATA<-DATA1[!is.na(DATA1$OverallSymptoms_participants),]"
+"0","DATA<-DATA[!is.na(DATA$OverallSymptoms_mean),]"
+"0","DATA<-DATA[!is.na(DATA$OverallSymptoms_sd),]"

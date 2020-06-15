@@ -1,0 +1,3 @@
+"0","DATAw<-DATA1[!is.na(DATA1$Weight_participants),]"
+"0","DATAw<-DATAw[!is.na(DATAw$Weight_mean),]"
+"0","DATAw<-DATAw[!is.na(DATAw$Weight_sd),]"

@@ -1,0 +1,32 @@
+library(metafor)
+# Load dataset
+
+dat <- get(data(dat.molloy2014)) 
+
+# Calculate r-to-z transformed correlations and corresponding sampling variances
+
+dat <- escalc(measure="ZCOR", ri=ri, ni=ni, data=dat) #
+
+# meta-analysis of the transformed correlations 
+
+res <- rma(yi, vi, data=dat) 
+res 
+
+# Standard funnel plot (Plot A)
+
+funnel(res)
+
+# Standard contour-enhanced funnel plot (Plot B)
+
+funnel(res, refline=0, level=c(90, 95, 99), 
+       shade=c("white", "gray", "darkgray"))  
+
+# Contour-enhanced funnel plot with colour (Plot C)
+
+funnel(res, refline=0, level=c(90, 95, 99), 
+       shade=c("white", "red", "orange")) 
+
+# Contour-enhanced funnel plot with adjusted significance levels (Plot C)
+
+funnel(res, refline=0, level=c(95, 99), 
+       shade=c("white", "red")) 

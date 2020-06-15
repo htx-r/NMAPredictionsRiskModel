@@ -1,0 +1,4 @@
+"0","#Contour-Enhanced Funnel plot"
+"0","ma <- metabin(event1,n1,event2,n2, subset = net1$treat1!=""Placebo"" & net1$treat2==""Placebo"", data=net1$data, sm=""OR"")"
+"0","funnel(ma, contour = c(0.9, 0.95, 0.99), col.contour = c(""darkred"", ""red"", ""lightcoral""), cex=1.5, col=""darkblue"", comb.fixed = F,"
+"0","bg=""blue"", cex.lab=1.2, xlab = paste(ma$sm, ""Effect reported as Active Treatment over Placebo""))"

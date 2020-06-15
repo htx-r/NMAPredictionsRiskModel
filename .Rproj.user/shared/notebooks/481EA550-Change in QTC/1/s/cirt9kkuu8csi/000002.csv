@@ -1,0 +1,7 @@
+"0","DATA<-DATA1[!is.na(DATA1$QTc_participants),]"
+"0","DATA<-DATA[!is.na(DATA$QTc_mean),]"
+"0","DATA<-DATA[!is.na(DATA$QTc_sd),]"
+"0","excludeID <-c(4334,4380)"
+"0","DATA=DATA[!DATA$Final_ID_all%in%excludeID,]"
+"0","cat(""Studies 4334 and 4380 were excluded because of disconnected network"")"
+"1","Studies 4334 and 4380 were excluded because of disconnected network"

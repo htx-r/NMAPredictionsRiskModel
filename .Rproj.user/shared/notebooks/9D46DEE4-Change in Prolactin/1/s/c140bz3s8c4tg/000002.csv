@@ -1,0 +1,5 @@
+"0","NMAdataContinuous=make.jagsNMA.data(studyid=Final_ID_all,t=Drug_name,y=Prolactin_mean, sd=Prolactin_sd, n=Prolactin_participants,data=DATA,type=""cont"",reference = ""Placebo"")"
+"1","[1]"
+"1"," ""Note: the treatments have been renamed as follows"""
+"1","
+"
